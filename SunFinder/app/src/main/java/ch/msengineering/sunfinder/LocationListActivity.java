@@ -43,13 +43,15 @@ public class LocationListActivity extends AppCompatActivity {
     private boolean mTwoPane;
 
     public LocationListActivity() {
-        //TODO: Liste updaten beim Erhalt, dann die anderen Services triggern und die Liste weiter updaten
-        //TODO: Beispiel: http://www.vogella.com/tutorials/Retrofit/article.html#adjust-activity
+        //TODO: Beispiel mit Liste: http://www.vogella.com/tutorials/Retrofit/article.html#adjust-activity
         webCamService = new WebCamServiceImpl(new ServiceConsumer() {
             @Override
             public void onWebCamNearby(Response<WebCamNearby> response) {
                 if (response.isSuccessful()) {
                     Log.i("SunFinder", "WebCamService: getNearby -> Response: " + response.toString());
+                    //TODO: Liste füllen
+                    //TODO: Bewertungen abfragen von Firebase, Liste updaten
+                    //TODO: (Optional) Wetter abfragen, Liste updaten
                 } else {
                     Log.e("SunFinder", "WebCamService: getNearby -> Failure: " + response.toString());
                 }
@@ -92,7 +94,8 @@ public class LocationListActivity extends AppCompatActivity {
             mTwoPane = true;
         }
 
-        //TODO: Bei Suche in Liste oder Position von Sensor triggern
+        //TODO: Bei Suche in Liste Google Maps API auf Latitude und Longitude abfragen
+        //TODO: Bei Ortung über Sensor ausführen (brauchen wir einen Button zum einschalten?)
         try {
             webCamService.getNearby(47.0502, 8.3093, 10);
         } catch (Exception e) {

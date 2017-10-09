@@ -94,7 +94,7 @@ public class LocationListActivity extends AppCompatActivity {
             mTwoPane = true;
         }
 
-        //TODO: Bei Suche in Liste Google Maps API auf Latitude und Longitude abfragen
+        //TODO: Bei Suche in Liste -> GeoLocationService :D
         //TODO: Bei Ortung über Sensor ausführen (brauchen wir einen Button zum einschalten?)
         try {
             webCamService.getNearby(47.0502, 8.3093, 10);

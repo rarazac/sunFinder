@@ -1,0 +1,511 @@
+{
+  "_sourceCreatedWith": "http://www.jsonschema2pojo.org/",
+  "status": "OK",
+  "result": {
+    "offset": 0,
+    "limit": 10,
+    "total": 48,
+    "webcams": [
+      {
+        "id": "1031240019",
+        "status": "active",
+        "title": "Ennetbürgen",
+        "image": {
+          "current": {
+            "icon": "https://images.webcams.travel/icon/1031240019.jpg",
+            "thumbnail": "https://images.webcams.travel/thumbnail/1031240019.jpg",
+            "preview": "https://images.webcams.travel/preview/1031240019.jpg",
+            "toenail": "https://images.webcams.travel/thumbnail/1031240019.jpg"
+          },
+          "daylight": {
+            "icon": "https://images.webcams.travel/daylight/icon/1031240019.jpg",
+            "thumbnail": "https://images.webcams.travel/daylight/thumbnail/1031240019.jpg",
+            "preview": "https://images.webcams.travel/daylight/preview/1031240019.jpg",
+            "toenail": "https://images.webcams.travel/daylight/thumbnail/1031240019.jpg"
+          },
+          "sizes": {
+            "icon": {
+              "width": 48,
+              "height": 48
+            },
+            "thumbnail": {
+              "width": 200,
+              "height": 112
+            },
+            "preview": {
+              "width": 400,
+              "height": 224
+            },
+            "toenail": {
+              "width": 200,
+              "height": 112
+            }
+          },
+          "update": 1507585824
+        },
+        "location": {
+          "city": "Ennetbürgen",
+          "region": "Nidwalden",
+          "region_code": "CH.NW",
+          "country": "Switzerland",
+          "country_code": "CH",
+          "continent": "Europe",
+          "continent_code": "EU",
+          "latitude": 46.985698,
+          "longitude": 8.407202,
+          "timezone": "Europe/Zurich"
+        }
+      },
+      {
+        "id": "1059055887",
+        "status": "active",
+        "title": "Lucerne",
+        "image": {
+          "current": {
+            "icon": "https://images.webcams.travel/icon/1059055887.jpg",
+            "thumbnail": "https://images.webcams.travel/thumbnail/1059055887.jpg",
+            "preview": "https://images.webcams.travel/preview/1059055887.jpg",
+            "toenail": "https://images.webcams.travel/thumbnail/1059055887.jpg"
+          },
+          "daylight": {
+            "icon": "https://images.webcams.travel/daylight/icon/1059055887.jpg",
+            "thumbnail": "https://images.webcams.travel/daylight/thumbnail/1059055887.jpg",
+            "preview": "https://images.webcams.travel/daylight/preview/1059055887.jpg",
+            "toenail": "https://images.webcams.travel/daylight/thumbnail/1059055887.jpg"
+          },
+          "sizes": {
+            "icon": {
+              "width": 48,
+              "height": 48
+            },
+            "thumbnail": {
+              "width": 200,
+              "height": 112
+            },
+            "preview": {
+              "width": 400,
+              "height": 224
+            },
+            "toenail": {
+              "width": 200,
+              "height": 112
+            }
+          },
+          "update": 1507586411
+        },
+        "location": {
+          "city": "Lucerne",
+          "region": "Lucerne",
+          "region_code": "CH.LU",
+          "country": "Switzerland",
+          "country_code": "CH",
+          "continent": "Europe",
+          "continent_code": "EU",
+          "latitude": 47.054584,
+          "longitude": 8.315856,
+          "timezone": "Europe/Zurich"
+        }
+      },
+      {
+        "id": "1080921163",
+        "status": "active",
+        "title": "Küssnacht › South-East: Lake of Lucerne",
+        "image": {
+          "current": {
+            "icon": "https://images.webcams.travel/icon/1080921163.jpg",
+            "thumbnail": "https://images.webcams.travel/thumbnail/1080921163.jpg",
+            "preview": "https://images.webcams.travel/preview/1080921163.jpg",
+            "toenail": "https://images.webcams.travel/thumbnail/1080921163.jpg"
+          },
+          "daylight": {
+            "icon": "https://images.webcams.travel/daylight/icon/1080921163.jpg",
+            "thumbnail": "https://images.webcams.travel/daylight/thumbnail/1080921163.jpg",
+            "preview": "https://images.webcams.travel/daylight/preview/1080921163.jpg",
+            "toenail": "https://images.webcams.travel/daylight/thumbnail/1080921163.jpg"
+          },
+          "sizes": {
+            "icon": {
+              "width": 48,
+              "height": 48
+            },
+            "thumbnail": {
+              "width": 200,
+              "height": 112
+            },
+            "preview": {
+              "width": 400,
+              "height": 224
+            },
+            "toenail": {
+              "width": 200,
+              "height": 112
+            }
+          },
+          "update": 1507579421
+        },
+        "location": {
+          "city": "Küssnacht",
+          "region": "Schwyz",
+          "region_code": "CH.SZ",
+          "country": "Switzerland",
+          "country_code": "CH",
+          "continent": "Europe",
+          "continent_code": "EU",
+          "latitude": 47.082363,
+          "longitude": 8.443052,
+          "timezone": "Europe/Zurich"
+        }
+      },
+      {
+        "id": "1119270291",
+        "status": "active",
+        "title": "Lucerne: Kapellbrücke",
+        "image": {
+          "current": {
+            "icon": "https://images.webcams.travel/icon/1119270291.jpg",
+            "thumbnail": "https://images.webcams.travel/thumbnail/1119270291.jpg",
+            "preview": "https://images.webcams.travel/preview/1119270291.jpg",
+            "toenail": "https://images.webcams.travel/thumbnail/1119270291.jpg"
+          },
+          "daylight": {
+            "icon": "https://images.webcams.travel/daylight/icon/1119270291.jpg",
+            "thumbnail": "https://images.webcams.travel/daylight/thumbnail/1119270291.jpg",
+            "preview": "https://images.webcams.travel/daylight/preview/1119270291.jpg",
+            "toenail": "https://images.webcams.travel/daylight/thumbnail/1119270291.jpg"
+          },
+          "sizes": {
+            "icon": {
+              "width": 48,
+              "height": 48
+            },
+            "thumbnail": {
+              "width": 200,
+              "height": 112
+            },
+            "preview": {
+              "width": 400,
+              "height": 224
+            },
+            "toenail": {
+              "width": 200,
+              "height": 112
+            }
+          },
+          "update": 1507568061
+        },
+        "location": {
+          "city": "Lucerne",
+          "region": "Lucerne",
+          "region_code": "CH.LU",
+          "country": "Switzerland",
+          "country_code": "CH",
+          "continent": "Europe",
+          "continent_code": "EU",
+          "latitude": 47.050754,
+          "longitude": 8.308926,
+          "timezone": "Europe/Zurich"
+        }
+      },
+      {
+        "id": "1133187026",
+        "status": "active",
+        "title": "Schwarzenberg LU: Schwarzenberg Arnen",
+        "image": {
+          "current": {
+            "icon": "https://images.webcams.travel/icon/1133187026.jpg",
+            "thumbnail": "https://images.webcams.travel/thumbnail/1133187026.jpg",
+            "preview": "https://images.webcams.travel/preview/1133187026.jpg",
+            "toenail": "https://images.webcams.travel/thumbnail/1133187026.jpg"
+          },
+          "daylight": {
+            "icon": "https://images.webcams.travel/daylight/icon/1133187026.jpg",
+            "thumbnail": "https://images.webcams.travel/daylight/thumbnail/1133187026.jpg",
+            "preview": "https://images.webcams.travel/daylight/preview/1133187026.jpg",
+            "toenail": "https://images.webcams.travel/daylight/thumbnail/1133187026.jpg"
+          },
+          "sizes": {
+            "icon": {
+              "width": 48,
+              "height": 48
+            },
+            "thumbnail": {
+              "width": 200,
+              "height": 112
+            },
+            "preview": {
+              "width": 400,
+              "height": 224
+            },
+            "toenail": {
+              "width": 200,
+              "height": 112
+            }
+          },
+          "update": 1507585645
+        },
+        "location": {
+          "city": "Schwarzenberg LU",
+          "region": "Lucerne",
+          "region_code": "CH.LU",
+          "country": "Switzerland",
+          "country_code": "CH",
+          "continent": "Europe",
+          "continent_code": "EU",
+          "latitude": 47.017921,
+          "longitude": 8.185115,
+          "timezone": "Europe/Zurich"
+        }
+      },
+      {
+        "id": "1173106247",
+        "status": "active",
+        "title": "Kastanienbaum: Weingut Rosenau",
+        "image": {
+          "current": {
+            "icon": "https://images.webcams.travel/icon/1173106247.jpg",
+            "thumbnail": "https://images.webcams.travel/thumbnail/1173106247.jpg",
+            "preview": "https://images.webcams.travel/preview/1173106247.jpg",
+            "toenail": "https://images.webcams.travel/thumbnail/1173106247.jpg"
+          },
+          "daylight": {
+            "icon": "https://images.webcams.travel/daylight/icon/1173106247.jpg",
+            "thumbnail": "https://images.webcams.travel/daylight/thumbnail/1173106247.jpg",
+            "preview": "https://images.webcams.travel/daylight/preview/1173106247.jpg",
+            "toenail": "https://images.webcams.travel/daylight/thumbnail/1173106247.jpg"
+          },
+          "sizes": {
+            "icon": {
+              "width": 48,
+              "height": 48
+            },
+            "thumbnail": {
+              "width": 200,
+              "height": 112
+            },
+            "preview": {
+              "width": 400,
+              "height": 224
+            },
+            "toenail": {
+              "width": 200,
+              "height": 112
+            }
+          },
+          "update": 1507585689
+        },
+        "location": {
+          "city": "Kastanienbaum",
+          "region": "Lucerne",
+          "region_code": "CH.LU",
+          "country": "Switzerland",
+          "country_code": "CH",
+          "continent": "Europe",
+          "continent_code": "EU",
+          "latitude": 47.003319,
+          "longitude": 8.332701,
+          "timezone": "Europe/Zurich"
+        }
+      },
+      {
+        "id": "1203103044",
+        "status": "active",
+        "title": "Lucerne: Seebecken",
+        "image": {
+          "current": {
+            "icon": "https://images.webcams.travel/icon/1203103044.jpg",
+            "thumbnail": "https://images.webcams.travel/thumbnail/1203103044.jpg",
+            "preview": "https://images.webcams.travel/preview/1203103044.jpg",
+            "toenail": "https://images.webcams.travel/thumbnail/1203103044.jpg"
+          },
+          "daylight": {
+            "icon": "https://images.webcams.travel/daylight/icon/1203103044.jpg",
+            "thumbnail": "https://images.webcams.travel/daylight/thumbnail/1203103044.jpg",
+            "preview": "https://images.webcams.travel/daylight/preview/1203103044.jpg",
+            "toenail": "https://images.webcams.travel/daylight/thumbnail/1203103044.jpg"
+          },
+          "sizes": {
+            "icon": {
+              "width": 48,
+              "height": 48
+            },
+            "thumbnail": {
+              "width": 200,
+              "height": 112
+            },
+            "preview": {
+              "width": 400,
+              "height": 224
+            },
+            "toenail": {
+              "width": 200,
+              "height": 112
+            }
+          },
+          "update": 1507586242
+        },
+        "location": {
+          "city": "Lucerne",
+          "region": "Lucerne",
+          "region_code": "CH.LU",
+          "country": "Switzerland",
+          "country_code": "CH",
+          "continent": "Europe",
+          "continent_code": "EU",
+          "latitude": 47.047522,
+          "longitude": 8.317825,
+          "timezone": "Europe/Zurich"
+        }
+      },
+      {
+        "id": "1228317630",
+        "status": "active",
+        "title": "Lucerne: Lake of Lucerne",
+        "image": {
+          "current": {
+            "icon": "https://images.webcams.travel/icon/1228317630.jpg",
+            "thumbnail": "https://images.webcams.travel/thumbnail/1228317630.jpg",
+            "preview": "https://images.webcams.travel/preview/1228317630.jpg",
+            "toenail": "https://images.webcams.travel/thumbnail/1228317630.jpg"
+          },
+          "daylight": {
+            "icon": "https://images.webcams.travel/daylight/icon/1228317630.jpg",
+            "thumbnail": "https://images.webcams.travel/daylight/thumbnail/1228317630.jpg",
+            "preview": "https://images.webcams.travel/daylight/preview/1228317630.jpg",
+            "toenail": "https://images.webcams.travel/daylight/thumbnail/1228317630.jpg"
+          },
+          "sizes": {
+            "icon": {
+              "width": 48,
+              "height": 48
+            },
+            "thumbnail": {
+              "width": 200,
+              "height": 112
+            },
+            "preview": {
+              "width": 400,
+              "height": 224
+            },
+            "toenail": {
+              "width": 200,
+              "height": 112
+            }
+          },
+          "update": 1507569039
+        },
+        "location": {
+          "city": "Lucerne",
+          "region": "Lucerne",
+          "region_code": "CH.LU",
+          "country": "Switzerland",
+          "country_code": "CH",
+          "continent": "Europe",
+          "continent_code": "EU",
+          "latitude": 47.051528,
+          "longitude": 8.312187,
+          "timezone": "Europe/Zurich"
+        }
+      },
+      {
+        "id": "1245084409",
+        "status": "active",
+        "title": "Lucerne: Bucher & Schmid Bootswerft AG − Blickrichtung Nord",
+        "image": {
+          "current": {
+            "icon": "https://images.webcams.travel/icon/1245084409.jpg",
+            "thumbnail": "https://images.webcams.travel/thumbnail/1245084409.jpg",
+            "preview": "https://images.webcams.travel/preview/1245084409.jpg",
+            "toenail": "https://images.webcams.travel/thumbnail/1245084409.jpg"
+          },
+          "daylight": {
+            "icon": "https://images.webcams.travel/daylight/icon/1245084409.jpg",
+            "thumbnail": "https://images.webcams.travel/daylight/thumbnail/1245084409.jpg",
+            "preview": "https://images.webcams.travel/daylight/preview/1245084409.jpg",
+            "toenail": "https://images.webcams.travel/daylight/thumbnail/1245084409.jpg"
+          },
+          "sizes": {
+            "icon": {
+              "width": 48,
+              "height": 48
+            },
+            "thumbnail": {
+              "width": 200,
+              "height": 112
+            },
+            "preview": {
+              "width": 400,
+              "height": 224
+            },
+            "toenail": {
+              "width": 200,
+              "height": 112
+            }
+          },
+          "update": 1507584852
+        },
+        "location": {
+          "city": "Lucerne",
+          "region": "Lucerne",
+          "region_code": "CH.LU",
+          "country": "Switzerland",
+          "country_code": "CH",
+          "continent": "Europe",
+          "continent_code": "EU",
+          "latitude": 47.047692,
+          "longitude": 8.318018,
+          "timezone": "Europe/Zurich"
+        }
+      },
+      {
+        "id": "1292514022",
+        "status": "active",
+        "title": "Malters: Bahnhof",
+        "image": {
+          "current": {
+            "icon": "https://images.webcams.travel/icon/1292514022.jpg",
+            "thumbnail": "https://images.webcams.travel/thumbnail/1292514022.jpg",
+            "preview": "https://images.webcams.travel/preview/1292514022.jpg",
+            "toenail": "https://images.webcams.travel/thumbnail/1292514022.jpg"
+          },
+          "daylight": {
+            "icon": "https://images.webcams.travel/daylight/icon/1292514022.jpg",
+            "thumbnail": "https://images.webcams.travel/daylight/thumbnail/1292514022.jpg",
+            "preview": "https://images.webcams.travel/daylight/preview/1292514022.jpg",
+            "toenail": "https://images.webcams.travel/daylight/thumbnail/1292514022.jpg"
+          },
+          "sizes": {
+            "icon": {
+              "width": 48,
+              "height": 48
+            },
+            "thumbnail": {
+              "width": 200,
+              "height": 112
+            },
+            "preview": {
+              "width": 400,
+              "height": 224
+            },
+            "toenail": {
+              "width": 200,
+              "height": 112
+            }
+          },
+          "update": 1507586259
+        },
+        "location": {
+          "city": "Malters",
+          "region": "Lucerne",
+          "region_code": "CH.LU",
+          "country": "Switzerland",
+          "country_code": "CH",
+          "continent": "Europe",
+          "continent_code": "EU",
+          "latitude": 47.038906,
+          "longitude": 8.180668,
+          "timezone": "Europe/Zurich"
+        }
+      }
+    ]
+  }
+}

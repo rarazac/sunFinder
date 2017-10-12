@@ -8,7 +8,7 @@ import retrofit2.Response;
  * Created by raphe on 09/10/2017.
  */
 
-public interface ServiceConsumer {
+public interface WebServiceConsumer {
 
     void onWebCamNearby(Response<WebCamNearby> response);
 

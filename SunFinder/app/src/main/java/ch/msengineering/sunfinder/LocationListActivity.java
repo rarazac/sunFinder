@@ -18,7 +18,11 @@ import android.widget.TextView;
 import java.util.List;
 
 import ch.msengineering.sunfinder.dummy.DummyContent;
-import ch.msengineering.sunfinder.services.ServiceConsumer;
+import ch.msengineering.sunfinder.services.LocalServiceConsumer;
+import ch.msengineering.sunfinder.services.WebServiceConsumer;
+import ch.msengineering.sunfinder.services.geolocation.GeoLocationService;
+import ch.msengineering.sunfinder.services.geolocation.GeoLocationServiceImpl;
+import ch.msengineering.sunfinder.services.geolocation.api.GeoLocation;
 import ch.msengineering.sunfinder.services.webcam.WebCamService;
 import ch.msengineering.sunfinder.services.webcam.WebCamServiceImpl;
 import ch.msengineering.sunfinder.services.webcam.api.WebCamNearby;
@@ -35,7 +39,9 @@ import retrofit2.Response;
  */
 public class LocationListActivity extends AppCompatActivity {
 
+    private final GeoLocationService geoLocationService;
     private final WebCamService webCamService;
+
     /**
      * Whether or not the activity is in two-pane mode, i.e. running on a tablet
      * device.
@@ -44,7 +50,22 @@ public class LocationListActivity extends AppCompatActivity {
 
     public LocationListActivity() {
         //TODO: Beispiel mit Liste: http://www.vogella.com/tutorials/Retrofit/article.html#adjust-activity
-        webCamService = new WebCamServiceImpl(new ServiceConsumer() {
+        geoLocationService = new GeoLocationServiceImpl(new LocalServiceConsumer() {
+            @Override
+            public void onGeoLocation(List<GeoLocation> geoLocations) {
+                StringBuilder sb = new StringBuilder();
+                for(GeoLocation geoLocation : geoLocations) {
+                    sb.append(geoLocation.toString() + '\t');
+                }
+                Log.i("SunFinder", "GeoLocationService: getGeoLocationByName -> Response: " + sb.toString());
+            }
+
+            @Override
+            public void onFailure(String message, Throwable t) {
+                Log.e("SunFinder", "GeoLocationService: getGeoLocationByName -> Failure: " + message, t);
+            }
+        });
+        webCamService = new WebCamServiceImpl(new WebServiceConsumer() {
             @Override
             public void onWebCamNearby(Response<WebCamNearby> response) {
                 if (response.isSuccessful()) {
@@ -96,6 +117,12 @@ public class LocationListActivity extends AppCompatActivity {
 
         //TODO: Bei Suche in Liste -> GeoLocationService :D
         //TODO: Bei Ortung über Sensor ausführen (brauchen wir einen Button zum einschalten?)
+        String locationName = "Zürich";
+        try {
+            geoLocationService.getGeoLocationByName(this, locationName);
+        } catch (Exception e) {
+            Log.e("SunFinder", "GeoLocationService: getGeoLocationByName -> Failure", e);
+        }
         try {
             webCamService.getNearby(47.0502, 8.3093, 10);
         } catch (Exception e) {

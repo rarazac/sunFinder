@@ -10,15 +10,22 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
+import ch.msengineering.sunfinder.services.LocalServiceConsumer;
 import ch.msengineering.sunfinder.services.geolocation.api.GeoLocation;
 
 /**
  * Created by raphe on 10/10/2017.
  */
 
-public class GeoLocationServiceImpl {
+public class GeoLocationServiceImpl implements GeoLocationService {
 
-    public List<GeoLocation> getGeoLocationByName(Context context, String locationName) {
+    private LocalServiceConsumer localServiceConsumer;
+
+    public GeoLocationServiceImpl(LocalServiceConsumer localServiceConsumer) {
+        this.localServiceConsumer = localServiceConsumer;
+    }
+
+    public void getGeoLocationByName(Context context, String locationName) {
         if(Geocoder.isPresent()){
             try {
                 Geocoder gc = new Geocoder(context);
@@ -36,14 +43,14 @@ public class GeoLocationServiceImpl {
                                     a.getLongitude()));
                     }
                 }
-                return geoLocations;
+                localServiceConsumer.onGeoLocation(geoLocations);
             } catch (IOException e) {
                 Log.e("SunFinder", "GeoLocationService: getGeoLocationByName -> Failure", e);
-                return createDummyGeoLocation();
+                localServiceConsumer.onGeoLocation(createDummyGeoLocation());
             }
         } else {
             Log.e("SunFinder", "GeoLocationService: getGeoLocationByName -> Failure: Device does not have a Geocoder");
-            return createDummyGeoLocation();
+            localServiceConsumer.onGeoLocation(createDummyGeoLocation());
         }
     }
 

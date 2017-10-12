@@ -3,7 +3,7 @@ package ch.msengineering.sunfinder.services.webcam;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
-import ch.msengineering.sunfinder.services.ServiceConsumer;
+import ch.msengineering.sunfinder.services.WebServiceConsumer;
 import ch.msengineering.sunfinder.services.webcam.api.WebCamNearby;
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -18,10 +18,10 @@ import retrofit2.converter.gson.GsonConverterFactory;
 public class WebCamServiceImpl implements WebCamService, Callback<WebCamNearby> {
 
     private final WebCamServiceEndpoint webCamServiceEndpoint;
-    private final ServiceConsumer serviceConsumer;
+    private final WebServiceConsumer webServiceConsumer;
 
-    public WebCamServiceImpl(ServiceConsumer serviceConsumer) {
-        this.serviceConsumer = serviceConsumer;
+    public WebCamServiceImpl(WebServiceConsumer webServiceConsumer) {
+        this.webServiceConsumer = webServiceConsumer;
 
         Gson gson = new GsonBuilder()
                 .setLenient()
@@ -42,11 +42,11 @@ public class WebCamServiceImpl implements WebCamService, Callback<WebCamNearby> 
 
     @Override
     public void onResponse(Call<WebCamNearby> call, Response<WebCamNearby> response) {
-        this.serviceConsumer.onWebCamNearby(response);
+        this.webServiceConsumer.onWebCamNearby(response);
     }
 
     @Override
     public void onFailure(Call<WebCamNearby> call, Throwable t) {
-        this.serviceConsumer.onFailure(call, t);
+        this.webServiceConsumer.onFailure(call, t);
     }
 }

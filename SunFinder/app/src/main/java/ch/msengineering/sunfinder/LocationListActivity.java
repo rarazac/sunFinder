@@ -17,12 +17,9 @@ import android.widget.TextView;
 
 import java.util.List;
 
+import ch.msengineering.sunfinder.item.GeoContent;
 import ch.msengineering.sunfinder.item.LocationContent;
-import ch.msengineering.sunfinder.services.LocalServiceConsumer;
 import ch.msengineering.sunfinder.services.WebServiceConsumer;
-import ch.msengineering.sunfinder.services.geolocation.GeoLocationService;
-import ch.msengineering.sunfinder.services.geolocation.GeoLocationServiceImpl;
-import ch.msengineering.sunfinder.services.geolocation.api.GeoLocation;
 import ch.msengineering.sunfinder.services.webcam.WebCamService;
 import ch.msengineering.sunfinder.services.webcam.WebCamServiceImpl;
 import ch.msengineering.sunfinder.services.webcam.api.WebCamNearby;
@@ -40,8 +37,11 @@ import retrofit2.Response;
  */
 public class LocationListActivity extends AppCompatActivity {
 
-    private final GeoLocationService geoLocationService;
-    private final WebCamService webCamService;
+    /**
+     * The list argument representing the list ID that this list
+     * represents.
+     */
+    public static final String ARG_LIST_ID = "list_id";
 
     /**
      * Whether or not the activity is in two-pane mode, i.e. running on a tablet
@@ -49,47 +49,7 @@ public class LocationListActivity extends AppCompatActivity {
      */
     private boolean mTwoPane;
 
-    public LocationListActivity() {
-        //TODO: Beispiel mit Liste: http://www.vogella.com/tutorials/Retrofit/article.html#adjust-activity
-        geoLocationService = new GeoLocationServiceImpl(new LocalServiceConsumer() {
-            @Override
-            public void onGeoLocation(List<GeoLocation> geoLocations) {
-                StringBuilder sb = new StringBuilder();
-                for(GeoLocation geoLocation : geoLocations) {
-                    sb.append(geoLocation.toString() + '\t');
-                }
-                Log.i("SunFinder", "GeoLocationService: getGeoLocationByName -> Response: " + sb.toString());
-            }
-
-            @Override
-            public void onFailure(String message, Throwable t) {
-                Log.e("SunFinder", "GeoLocationService: getGeoLocationByName -> Failure: " + message, t);
-            }
-        });
-        webCamService = new WebCamServiceImpl(new WebServiceConsumer() {
-            @Override
-            public void onWebCamNearby(Response<WebCamNearby> response) {
-                if (response.isSuccessful()) {
-                    Log.i("SunFinder", "WebCamService: getNearby -> Response: " + response.toString());
-                    //TODO: Liste füllen
-                    //TODO: Bewertungen abfragen von Firebase, Liste updaten
-                    //TODO: (Optional) Wetter abfragen, Liste updaten
-                    for(Webcam webcam : response.body().getResult().getWebcams()) {
-                        LocationContent.addItem(LocationContent.createItem(webcam.getId(), webcam, null));
-                    }
-                    RecyclerView recyclerView = (RecyclerView) findViewById(R.id.location_list);
-                    recyclerView.getAdapter().notifyDataSetChanged();
-                } else {
-                    Log.e("SunFinder", "WebCamService: getNearby -> Failure: " + response.toString());
-                }
-            }
-
-            @Override
-            public void onFailure(Call<?> call, Throwable t) {
-                Log.e("SunFinder", "WebCamService: getNearby -> Failure: " + call.toString(), t);
-            }
-        });
-    }
+    private WebCamService webCamService;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -99,15 +59,6 @@ public class LocationListActivity extends AppCompatActivity {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         toolbar.setTitle(getTitle());
-
-        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
-            }
-        });
 
         View recyclerView = findViewById(R.id.location_list);
         assert recyclerView != null;
@@ -121,18 +72,38 @@ public class LocationListActivity extends AppCompatActivity {
             mTwoPane = true;
         }
 
-        //TODO: Bei Suche in Liste -> GeoLocationService :D
-        //TODO: Bei Ortung über Sensor ausführen (brauchen wir einen Button zum einschalten?)
-        String locationName = "Zürich";
-        try {
-            geoLocationService.getGeoLocationByName(this, locationName);
-        } catch (Exception e) {
-            Log.e("SunFinder", "GeoLocationService: getGeoLocationByName -> Failure", e);
-        }
-        try {
-            webCamService.getNearby(47.0502, 8.3093, 10);
-        } catch (Exception e) {
-            Log.e("SunFinder", "WebCamService: getNearby -> Failure", e);
+        webCamService = new WebCamServiceImpl(new WebServiceConsumer() {
+            @Override
+            public void onWebCamNearby(Response<WebCamNearby> response) {
+                if (response.isSuccessful()) {
+                    Log.i("SunFinder", "WebCamService: onWebCamNearby -> Response: " + response.toString());
+                    for(Webcam webcam : response.body().getResult().getWebcams()) {
+                        LocationContent.addItem(LocationContent.createItem(webcam.getId(), webcam));
+                    }
+                    RecyclerView recyclerView = (RecyclerView) findViewById(R.id.location_list);
+                    recyclerView.getAdapter().notifyDataSetChanged();
+                } else {
+                    Log.e("SunFinder", "WebCamService: onWebCamNearby -> Failure: " + response.toString());
+                    Snackbar.make(findViewById(R.id.location_list), "WebCamService: onWebCamNearby -> Failure: " + response.toString(), Snackbar.LENGTH_LONG).show();
+                }
+            }
+
+            @Override
+            public void onFailure(Call<?> call, Throwable t) {
+                Log.e("SunFinder", "WebCamService: onFailure -> Failure: " + call.toString(), t);
+                Snackbar.make(findViewById(R.id.location_list), "WebCamService: onFailure -> Failure: " + call.toString(), Snackbar.LENGTH_LONG).show();
+            }
+        });
+
+        if (getIntent().getExtras().containsKey(ARG_LIST_ID)) {
+            GeoContent.GeoItem geoItem = GeoContent.ITEM_MAP.get(getIntent().getExtras().getString(ARG_LIST_ID));
+
+            try {
+                webCamService.getNearby(geoItem.geoLocation.getLatitude(), geoItem.geoLocation.getLongitude(), 10);
+            } catch (Exception e) {
+                Log.e("SunFinder", "WebCamService: getNearby -> Failure", e);
+                Snackbar.make(findViewById(R.id.location_list), "WebCamService: getNearby -> Failure: " + e.getMessage(), Snackbar.LENGTH_LONG).show();
+            }
         }
     }
 
@@ -198,8 +169,8 @@ public class LocationListActivity extends AppCompatActivity {
             public ViewHolder(View view) {
                 super(view);
                 mView = view;
-                mIdView = (TextView) view.findViewById(R.id.id);
-                mContentView = (TextView) view.findViewById(R.id.content);
+                mIdView = view.findViewById(R.id.id);
+                mContentView = view.findViewById(R.id.content);
             }
 
             @Override

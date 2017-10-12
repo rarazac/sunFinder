@@ -1,9 +1,16 @@
 package ch.msengineering.sunfinder.services.geolocation;
 
-import android.content.Context;
+import android.Manifest;
+import android.app.Activity;
+import android.content.pm.PackageManager;
 import android.location.Address;
+import android.location.Criteria;
 import android.location.Geocoder;
-import android.support.annotation.NonNull;
+import android.location.Location;
+import android.location.LocationListener;
+import android.location.LocationManager;
+import android.os.Bundle;
+import android.support.v4.app.ActivityCompat;
 import android.util.Log;
 
 import java.io.IOException;
@@ -13,22 +20,66 @@ import java.util.List;
 import ch.msengineering.sunfinder.services.LocalServiceConsumer;
 import ch.msengineering.sunfinder.services.geolocation.api.GeoLocation;
 
+import static android.content.Context.LOCATION_SERVICE;
+
 /**
  * Created by raphe on 10/10/2017.
  */
 
-public class GeoLocationServiceImpl implements GeoLocationService {
+public class GeoLocationServiceImpl implements GeoLocationService  {
 
-    private LocalServiceConsumer localServiceConsumer;
+    private final Activity activity;
+    private final LocalServiceConsumer localServiceConsumer;
+    private final LocationManager locationManager;
 
-    public GeoLocationServiceImpl(LocalServiceConsumer localServiceConsumer) {
+    public GeoLocationServiceImpl(Activity activity, LocalServiceConsumer localServiceConsumer) {
+        this.activity = activity;
         this.localServiceConsumer = localServiceConsumer;
+
+        locationManager = (LocationManager) activity.getSystemService(LOCATION_SERVICE);
     }
 
-    public void getGeoLocationByName(Context context, String locationName) {
+    public void getCurrentLocation() {
+        int refreshTimeMs = 1000 * 30;
+        int refreshDistanceMeter = 1000;
+
+        String bestProvider = locationManager.getBestProvider(new Criteria(), true);
+
+        if (ActivityCompat.checkSelfPermission(activity, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(activity, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            ActivityCompat.requestPermissions(activity, new String[]{Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION}, 1337);
+        } else {
+            locationManager.requestLocationUpdates(bestProvider, refreshTimeMs,
+                    refreshDistanceMeter, new LocationListener() {
+                        @Override
+                        public void onLocationChanged(Location location) {
+                        }
+
+                        @Override
+                        public void onStatusChanged(String s, int i, Bundle bundle) {
+                        }
+
+                        @Override
+                        public void onProviderEnabled(String s) {
+                        }
+
+                        @Override
+                        public void onProviderDisabled(String s) {
+                        }
+                    });
+        }
+
+        Location lastKnownLocation = locationManager.getLastKnownLocation(bestProvider);
+        if (lastKnownLocation != null) {
+            localServiceConsumer.onGeoLocation(new GeoLocation("current", "current", "current", lastKnownLocation.getLatitude(), lastKnownLocation.getLongitude()));
+        } else {
+            localServiceConsumer.onGeoLocation(createDummyGeoLocation());
+        }
+    }
+
+    public void getGeoLocationByName(String locationName) {
         if(Geocoder.isPresent()){
             try {
-                Geocoder gc = new Geocoder(context);
+                Geocoder gc = new Geocoder(activity);
                 List<Address> addresses= gc.getFromLocationName(locationName, 10);
 
                 List<GeoLocation> geoLocations = new ArrayList<>(addresses.size());

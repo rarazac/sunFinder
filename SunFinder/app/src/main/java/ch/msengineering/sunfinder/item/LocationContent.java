@@ -18,7 +18,7 @@ import ch.msengineering.sunfinder.services.webcam.api.Webcam;
 public class LocationContent {
 
     private static final List<LocationItem> ORIGINAL_ITEMS = new ArrayList<>();
-    private static String currentQuery = null;
+    private static String currentQuery = "";
 
     /**
      * An array of items.
@@ -43,7 +43,7 @@ public class LocationContent {
     }
 
     public static void filter(String query) {
-        currentQuery = query;
+        currentQuery = query != null ? query.toLowerCase() : "";
 
         for(LocationItem item : ORIGINAL_ITEMS) {
             ITEMS.remove(item);
@@ -91,11 +91,15 @@ public class LocationContent {
         }
 
         public boolean filter(String query) {
-            return id.contains(query) ||
-                    webCam.getId().contains(query) ||
-                    webCam.getTitle().contains(query) ||
-                    ("" + webCam.getLocation().getLongitude()).contains(query) ||
-                    ("" + webCam.getLocation().getLatitude()).contains(query);
+            return id.toLowerCase().contains(query) ||
+                    (webCam != null && (
+                        webCam.getId().toLowerCase().contains(query) ||
+                        webCam.getTitle().toLowerCase().contains(query) ||
+                            (webCam.getLocation() != null && (
+                                ("" + webCam.getLocation().getLongitude()).toLowerCase().contains(query) ||
+                                ("" + webCam.getLocation().getLatitude()).toLowerCase().contains(query)
+                            ))
+                    ));
         }
 
         @Override

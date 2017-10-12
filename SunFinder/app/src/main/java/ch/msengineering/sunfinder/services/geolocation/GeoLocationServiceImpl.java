@@ -70,7 +70,7 @@ public class GeoLocationServiceImpl implements GeoLocationService  {
 
         Location lastKnownLocation = locationManager.getLastKnownLocation(bestProvider);
         if (lastKnownLocation != null) {
-            localServiceConsumer.onGeoLocation(new GeoLocation(bestProvider, "", "", lastKnownLocation.getLatitude(), lastKnownLocation.getLongitude()));
+            localServiceConsumer.onGeoLocation(new GeoLocation(bestProvider, "Unknown", "Unknown", lastKnownLocation.getLatitude(), lastKnownLocation.getLongitude()));
         } else {
             Log.w("SunFinder", "GeoLocationService: getCurrentLocation -> Warning: No last known location!");
             localServiceConsumer.onGeoLocation(createDummyGeoLocation());

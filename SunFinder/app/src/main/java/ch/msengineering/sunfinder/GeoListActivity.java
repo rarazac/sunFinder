@@ -164,9 +164,10 @@ public class GeoListActivity extends AppCompatActivity implements SearchView.OnQ
         @Override
         public void onBindViewHolder(final ViewHolder holder, int position) {
             holder.mItem = mValues.get(position);
-            holder.mIdView.setText(mValues.get(position).id);
-            holder.mContentView.setText(mValues.get(position).geoLocation.getName());
-            holder.mItem = mValues.get(position);
+            holder.mNameView.setText(mValues.get(position).geoLocation.getName());
+            holder.mCountryNameView.setText(mValues.get(position).geoLocation.getCountryName());
+            holder.mLatitudeView.setText(String.format("%s", mValues.get(position).geoLocation.getLatitude()));
+            holder.mLongitudeView.setText(String.format("%s", mValues.get(position).geoLocation.getLongitude()));
 
             holder.mView.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -187,20 +188,24 @@ public class GeoListActivity extends AppCompatActivity implements SearchView.OnQ
 
         public class ViewHolder extends RecyclerView.ViewHolder {
             public final View mView;
-            public final TextView mIdView;
-            public final TextView mContentView;
+            public final TextView mNameView;
+            public final TextView mCountryNameView;
+            public final TextView mLatitudeView;
+            public final TextView mLongitudeView;
             public GeoContent.GeoItem mItem;
 
             public ViewHolder(View view) {
                 super(view);
                 mView = view;
-                mIdView = view.findViewById(R.id.id);
-                mContentView = view.findViewById(R.id.content);
+                mNameView = view.findViewById(R.id.name);
+                mCountryNameView = view.findViewById(R.id.country_name);
+                mLatitudeView = view.findViewById(R.id.latitude);
+                mLongitudeView = view.findViewById(R.id.longitude);
             }
 
             @Override
             public String toString() {
-                return super.toString() + " '" + mContentView.getText() + "'";
+                return super.toString() + " '" + mNameView.getText() + "'";
             }
         }
     }

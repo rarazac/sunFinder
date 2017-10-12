@@ -21,15 +21,15 @@ public class GeoLocation {
     }
 
     public String getName() {
-        return name;
+        return name != null ? name : "";
     }
 
     public String getCountryName() {
-        return countryName;
+        return countryName != null ? countryName : "";
     }
 
     public String getCountryCode() {
-        return countryCode;
+        return countryCode != null ? countryCode : "";
     }
 
     public double getLatitude() {

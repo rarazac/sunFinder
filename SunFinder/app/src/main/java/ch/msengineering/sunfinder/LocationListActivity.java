@@ -70,6 +70,9 @@ public class LocationListActivity extends AppCompatActivity implements SearchVie
         setSupportActionBar(toolbar);
         toolbar.setTitle(getTitle());
 
+        SearchView searchView = (SearchView) findViewById(R.id.search_view);
+        searchView.setOnQueryTextListener(this);
+
         RecyclerView recyclerView = (RecyclerView) findViewById(R.id.location_list);
         assert recyclerView != null;
         setupRecyclerView(recyclerView);

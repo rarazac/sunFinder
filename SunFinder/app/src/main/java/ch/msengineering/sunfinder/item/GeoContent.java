@@ -44,7 +44,7 @@ public class GeoContent {
     }
 
     public static void filter(String query) {
-        currentQuery = query;
+        currentQuery = query != null ? query.toLowerCase() : "";
 
         for(GeoItem item : ORIGINAL_ITEMS) {
             ITEMS.remove(item);
@@ -92,12 +92,14 @@ public class GeoContent {
         }
 
         public boolean filter(String query) {
-            return id.contains(query) ||
-                    geoLocation.getName().contains(query) ||
-                    geoLocation.getCountryCode().contains(query) ||
-                    geoLocation.getCountryName().contains(query) ||
-                    ("" + geoLocation.getLongitude()).contains(query) ||
-                    ("" + geoLocation.getLatitude()).contains(query);
+            return id.toLowerCase().contains(query) ||
+                (geoLocation != null && (
+                    geoLocation.getName().toLowerCase().contains(query) ||
+                    geoLocation.getCountryCode().toLowerCase().contains(query) ||
+                    geoLocation.getCountryName().toLowerCase().contains(query) ||
+                    ("" + geoLocation.getLongitude()).toLowerCase().contains(query) ||
+                    ("" + geoLocation.getLatitude()).toLowerCase().contains(query)
+                ));
         }
 
         @Override

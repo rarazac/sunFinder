@@ -51,7 +51,7 @@ public class Webcam implements Serializable {
     }
 
     public String getId() {
-        return id;
+        return id  != null ? id : "";
     }
 
     public void setId(String id) {
@@ -77,7 +77,7 @@ public class Webcam implements Serializable {
     }
 
     public String getTitle() {
-        return title;
+        return title != null ? title : "";
     }
 
     public void setTitle(String title) {

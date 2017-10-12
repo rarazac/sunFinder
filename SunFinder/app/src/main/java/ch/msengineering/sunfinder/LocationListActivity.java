@@ -17,7 +17,7 @@ import android.widget.TextView;
 
 import java.util.List;
 
-import ch.msengineering.sunfinder.dummy.DummyContent;
+import ch.msengineering.sunfinder.item.LocationContent;
 import ch.msengineering.sunfinder.services.LocalServiceConsumer;
 import ch.msengineering.sunfinder.services.WebServiceConsumer;
 import ch.msengineering.sunfinder.services.geolocation.GeoLocationService;
@@ -26,6 +26,7 @@ import ch.msengineering.sunfinder.services.geolocation.api.GeoLocation;
 import ch.msengineering.sunfinder.services.webcam.WebCamService;
 import ch.msengineering.sunfinder.services.webcam.WebCamServiceImpl;
 import ch.msengineering.sunfinder.services.webcam.api.WebCamNearby;
+import ch.msengineering.sunfinder.services.webcam.api.Webcam;
 import retrofit2.Call;
 import retrofit2.Response;
 
@@ -73,6 +74,11 @@ public class LocationListActivity extends AppCompatActivity {
                     //TODO: Liste füllen
                     //TODO: Bewertungen abfragen von Firebase, Liste updaten
                     //TODO: (Optional) Wetter abfragen, Liste updaten
+                    for(Webcam webcam : response.body().getResult().getWebcams()) {
+                        LocationContent.addItem(LocationContent.createItem(webcam.getId(), webcam, null));
+                    }
+                    RecyclerView recyclerView = (RecyclerView) findViewById(R.id.location_list);
+                    recyclerView.getAdapter().notifyDataSetChanged();
                 } else {
                     Log.e("SunFinder", "WebCamService: getNearby -> Failure: " + response.toString());
                 }
@@ -131,15 +137,15 @@ public class LocationListActivity extends AppCompatActivity {
     }
 
     private void setupRecyclerView(@NonNull RecyclerView recyclerView) {
-        recyclerView.setAdapter(new SimpleItemRecyclerViewAdapter(DummyContent.ITEMS));
+        recyclerView.setAdapter(new SimpleItemRecyclerViewAdapter(LocationContent.ITEMS));
     }
 
     public class SimpleItemRecyclerViewAdapter
             extends RecyclerView.Adapter<SimpleItemRecyclerViewAdapter.ViewHolder> {
 
-        private final List<DummyContent.DummyItem> mValues;
+        private final List<LocationContent.LocationItem> mValues;
 
-        public SimpleItemRecyclerViewAdapter(List<DummyContent.DummyItem> items) {
+        public SimpleItemRecyclerViewAdapter(List<LocationContent.LocationItem> items) {
             mValues = items;
         }
 
@@ -154,7 +160,7 @@ public class LocationListActivity extends AppCompatActivity {
         public void onBindViewHolder(final ViewHolder holder, int position) {
             holder.mItem = mValues.get(position);
             holder.mIdView.setText(mValues.get(position).id);
-            holder.mContentView.setText(mValues.get(position).content);
+            holder.mContentView.setText(mValues.get(position).webCam.getTitle());
 
             holder.mView.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -187,7 +193,7 @@ public class LocationListActivity extends AppCompatActivity {
             public final View mView;
             public final TextView mIdView;
             public final TextView mContentView;
-            public DummyContent.DummyItem mItem;
+            public LocationContent.LocationItem mItem;
 
             public ViewHolder(View view) {
                 super(view);

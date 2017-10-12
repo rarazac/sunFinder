@@ -73,7 +73,9 @@ public class LocationDetailActivity extends AppCompatActivity {
             //
             // http://developer.android.com/design/patterns/navigation.html#up-vs-back
             //
-            navigateUpTo(new Intent(this, LocationListActivity.class));
+            Intent intent = new Intent(this, LocationListActivity.class);
+            intent.putExtra("home", true);
+            navigateUpTo(intent);
             return true;
         }
         return super.onOptionsItemSelected(item);

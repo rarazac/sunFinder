@@ -1,17 +1,25 @@
 package ch.msengineering.sunfinder.item;
 
+import android.support.annotation.NonNull;
+
+import org.apache.commons.lang3.builder.EqualsBuilder;
+import org.apache.commons.lang3.builder.HashCodeBuilder;
+
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 import ch.msengineering.sunfinder.services.geolocation.api.GeoLocation;
-import ch.msengineering.sunfinder.services.webcam.api.Webcam;
 
 /**
  *
  */
 public class GeoContent {
+
+    private static final List<GeoItem> ORIGINAL_ITEMS = new ArrayList<>();
+    private static String currentQuery = null;
 
     /**
      * An array of items.
@@ -26,18 +34,55 @@ public class GeoContent {
     public static void addItem(GeoItem item) {
         if (!ITEM_MAP.containsKey(item.id)) {
             ITEM_MAP.put(item.id, item);
-            ITEMS.add(item);
+            ORIGINAL_ITEMS.add(item);
+            GeoItem filterItem = filterItem(item);
+            if (filterItem != null) {
+                ITEMS.add(item);
+            }
+            Collections.sort(ITEMS);
         }
+    }
+
+    public static void filter(String query) {
+        currentQuery = query;
+
+        for(GeoItem item : ORIGINAL_ITEMS) {
+            ITEMS.remove(item);
+
+            GeoItem filterItem = filterItem(item);
+            if (filterItem != null) {
+                ITEMS.add(filterItem);
+            }
+        }
+
+        Collections.sort(ITEMS);
+    }
+
+    public static void clear() {
+        currentQuery = null;
+        ITEM_MAP.clear();
+        ORIGINAL_ITEMS.clear();
+        ITEMS.clear();
     }
 
     public static GeoItem createItem(GeoLocation geoLocation) {
         return new GeoItem(geoLocation);
     }
 
+    private static GeoItem filterItem(GeoItem item) {
+        if (currentQuery == null || currentQuery.isEmpty()) {
+            return item;
+        }
+        if (item.filter(currentQuery)) {
+            return item;
+        }
+        return null;
+    }
+
     /**
      * A item representing a piece of content.
      */
-    public static class GeoItem {
+    public static class GeoItem implements Comparable<GeoItem> {
         public final String id;
         public final GeoLocation geoLocation;
 
@@ -46,9 +91,23 @@ public class GeoContent {
             this.geoLocation = geoLocation;
         }
 
+        public boolean filter(String query) {
+            return id.contains(query) ||
+                    geoLocation.getName().contains(query) ||
+                    geoLocation.getCountryCode().contains(query) ||
+                    geoLocation.getCountryName().contains(query) ||
+                    ("" + geoLocation.getLongitude()).contains(query) ||
+                    ("" + geoLocation.getLatitude()).contains(query);
+        }
+
         @Override
         public String toString() {
             return String.format("id: %s, geoLocation: %s", id, geoLocation);
+        }
+
+        @Override
+        public int compareTo(@NonNull GeoItem other) {
+            return geoLocation.getName().compareTo(other.geoLocation.getName());
         }
     }
 }

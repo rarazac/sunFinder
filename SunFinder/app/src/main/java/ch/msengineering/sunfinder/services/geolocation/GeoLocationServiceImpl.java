@@ -70,37 +70,33 @@ public class GeoLocationServiceImpl implements GeoLocationService  {
 
         Location lastKnownLocation = locationManager.getLastKnownLocation(bestProvider);
         if (lastKnownLocation != null) {
-            localServiceConsumer.onGeoLocation(new GeoLocation("current", "current", "current", lastKnownLocation.getLatitude(), lastKnownLocation.getLongitude()));
+            localServiceConsumer.onGeoLocation(new GeoLocation(bestProvider, "", "", lastKnownLocation.getLatitude(), lastKnownLocation.getLongitude()));
         } else {
+            Log.w("SunFinder", "GeoLocationService: getCurrentLocation -> Warning: No last known location!");
             localServiceConsumer.onGeoLocation(createDummyGeoLocation());
         }
     }
 
-    public void getGeoLocationByName(String locationName) {
+    public void getGeoLocationByName(String locationName) throws IOException {
         if(Geocoder.isPresent()){
-            try {
-                Geocoder gc = new Geocoder(activity);
-                List<Address> addresses= gc.getFromLocationName(locationName, 10);
+            Geocoder gc = new Geocoder(activity);
+            List<Address> addresses= gc.getFromLocationName(locationName, 10);
 
-                List<GeoLocation> geoLocations = new ArrayList<>(addresses.size());
-                for(Address a : addresses){
-                    if(a.hasLatitude() && a.hasLongitude()){
-                        geoLocations.add(
-                                new GeoLocation(
+            List<GeoLocation> geoLocations = new ArrayList<>(addresses.size());
+            for(Address a : addresses){
+                if(a.hasLatitude() && a.hasLongitude()){
+                    geoLocations.add(
+                            new GeoLocation(
                                     a.getFeatureName(),
                                     a.getCountryName(),
                                     a.getCountryCode(),
                                     a.getLatitude(),
                                     a.getLongitude()));
-                    }
                 }
-                localServiceConsumer.onGeoLocation(geoLocations);
-            } catch (IOException e) {
-                Log.e("SunFinder", "GeoLocationService: getGeoLocationByName -> Failure", e);
-                localServiceConsumer.onGeoLocation(createDummyGeoLocation());
             }
+            localServiceConsumer.onGeoLocation(geoLocations);
         } else {
-            Log.e("SunFinder", "GeoLocationService: getGeoLocationByName -> Failure: Device does not have a Geocoder");
+            Log.w("SunFinder", "GeoLocationService: getGeoLocationByName -> Warning: Device does not have a Geocoder!");
             localServiceConsumer.onGeoLocation(createDummyGeoLocation());
         }
     }

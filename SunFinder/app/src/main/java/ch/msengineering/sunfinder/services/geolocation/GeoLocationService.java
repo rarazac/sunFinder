@@ -1,5 +1,7 @@
 package ch.msengineering.sunfinder.services.geolocation;
 
+import java.io.IOException;
+
 /**
  * Created by raphe on 10/10/2017.
  */
@@ -7,6 +9,6 @@ package ch.msengineering.sunfinder.services.geolocation;
 public interface GeoLocationService {
 
     void getCurrentLocation();
-    void getGeoLocationByName(String locationName);
+    void getGeoLocationByName(String locationName) throws IOException;
 
 }

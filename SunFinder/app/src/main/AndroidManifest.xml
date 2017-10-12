@@ -15,7 +15,7 @@
         android:theme="@style/AppTheme">
         <activity
             android:name=".GeoListActivity"
-            android:label="@string/title_geo_list"
+            android:label="@string/geo_list_title"
             android:theme="@style/AppTheme.NoActionBar">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -23,7 +23,7 @@
             </intent-filter>
         </activity>
         <activity android:name=".LocationListActivity"
-            android:label="@string/title_location_list"
+            android:label="@string/location_list_title"
             android:theme="@style/AppTheme.NoActionBar">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
@@ -31,7 +31,7 @@
         </activity>
         <activity
             android:name=".LocationDetailActivity"
-            android:label="@string/title_location_detail"
+            android:label="@string/location_detail_title"
             android:parentActivityName=".LocationListActivity"
             android:theme="@style/AppTheme.NoActionBar">
             <meta-data

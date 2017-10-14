@@ -44,10 +44,21 @@
         android:id="@+id/fab"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_gravity="center_vertical|start"
-        android:layout_margin="@dimen/fab_margin"
+        tools:layout_width="match_parent"
+        android:scaleType="center"
+        android:src="@drawable/rate_text"
+        app:layout_anchor="@+id/app_bar"
+        app:layout_anchorGravity="bottom|end" />
+
+    <RatingBar
+        android:id="@+id/ratingBar"
+        android:layout_width="335dp"
+        android:layout_height="wrap_content"
+        android:numStars="8"
+        android:rating="3.0"
+        android:stepSize="1.0"
+        app:srcCompat="@android:drawable/stat_notify_chat"
         app:layout_anchor="@+id/location_detail_container"
-        app:layout_anchorGravity="top|end"
-        app:srcCompat="@android:drawable/stat_notify_chat" />
+        tools:layout_gravity="center" />
 
 </android.support.design.widget.CoordinatorLayout>

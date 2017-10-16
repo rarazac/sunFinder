@@ -1,6 +1,7 @@
 package ch.msengineering.sunfinder;
 
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
@@ -9,6 +10,8 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 import android.view.View;
+
+import ch.msengineering.sunfinder.item.LocationContent;
 
 /**
  * An activity representing a single Location detail screen. This
@@ -29,8 +32,15 @@ public class LocationDetailActivity extends AppCompatActivity {
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Snackbar.make(view, "Replace with your own detail action", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
+                LocationContent.LocationItem mItem = LocationContent.ITEM_MAP.get(getIntent().getStringExtra(LocationDetailFragment.ARG_ITEM_ID));
+                Uri gmmIntentUri = Uri.parse("geo:" + mItem.webCam.getLocation().getLatitude() + "," + mItem.webCam.getLocation().getLongitude() +
+                                "?q=" + mItem.webCam.getLocation().getLatitude() + "," + mItem.webCam.getLocation().getLongitude() + "(" + mItem.webCam.getTitle() + ")");
+                Intent mapIntent = new Intent(Intent.ACTION_VIEW, gmmIntentUri);
+                mapIntent.setPackage("com.google.android.apps.maps");
+                if (mapIntent.resolveActivity(getPackageManager()) != null) {
+                    startActivity(mapIntent);
+                }
+
             }
         });
 

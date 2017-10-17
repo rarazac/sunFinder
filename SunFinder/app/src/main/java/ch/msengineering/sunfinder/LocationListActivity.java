@@ -17,12 +17,17 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import com.google.firebase.database.DatabaseError;
+
 import java.util.List;
 
 import ch.msengineering.sunfinder.item.GeoContent;
 import ch.msengineering.sunfinder.item.LocationContent;
+import ch.msengineering.sunfinder.services.RatingServiceConsumer;
 import ch.msengineering.sunfinder.services.WebServiceConsumer;
 import ch.msengineering.sunfinder.services.geolocation.api.GeoLocation;
+import ch.msengineering.sunfinder.services.rating.RatingService;
+import ch.msengineering.sunfinder.services.rating.RatingServiceImplementation;
 import ch.msengineering.sunfinder.services.webcam.WebCamService;
 import ch.msengineering.sunfinder.services.webcam.WebCamServiceImpl;
 import ch.msengineering.sunfinder.services.webcam.api.WebCamNearby;
@@ -60,6 +65,7 @@ public class LocationListActivity extends AppCompatActivity implements SearchVie
     private WebCamService webCamService;
     private GeoLocation lastSearchedLocation;
     private int lastRadiusKm;
+    private RatingService ratingService;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -107,6 +113,8 @@ public class LocationListActivity extends AppCompatActivity implements SearchVie
 
                     for(Webcam webcam : response.body().getResult().getWebcams()) {
                         LocationContent.addItem(LocationContent.createItem(webcam.getId(), webcam));
+                        // request a rating for the webcam
+                        getRating(webcam.getId());
                     }
 
                     RecyclerView recyclerView = (RecyclerView) findViewById(R.id.location_list);
@@ -121,6 +129,29 @@ public class LocationListActivity extends AppCompatActivity implements SearchVie
             public void onFailure(Call<?> call, Throwable t) {
                 Log.e("SunFinder", "WebCamService: onFailure -> Failure: " + call.toString(), t);
                 showSnackbar("WebCamService: onFailure -> Failure: " + call.toString());
+            }
+        });
+
+        ratingService = new RatingServiceImplementation(new RatingServiceConsumer() {
+            @Override
+            public void onRatingSet(DatabaseError databaseError) {
+                // dont need this here, we can only rate in LocationDetailFragment
+            }
+
+            @Override
+            public void onRatingGet(String id, int ratingValue) {
+                // Add all ratings from the database to the corresponding webcam
+                for(int i = 0; i < LocationContent.ITEMS.size(); i++) {
+                    if(LocationContent.ITEMS.get(i).webCam.getId().equals(id)) {
+                        // we found the webcam which has the same id as one in the db, set the rating
+                        LocationContent.ITEMS.get(i).webCam.setRating(ratingValue);
+                        Log.v("sunFinder", "LocationListActivity.onRatingGet(); id = " + id + "rating = " + ratingValue);
+                    }
+                }
+            }
+            @Override
+            public void onFailure(DatabaseError databaseError) {
+                Log.e("SunFinder", "RatingService: onFailure -> Failure: ",databaseError.toException());
             }
         });
 
@@ -151,6 +182,15 @@ public class LocationListActivity extends AppCompatActivity implements SearchVie
         } catch (Exception e) {
             Log.e("SunFinder", "WebCamService: getNearby -> Failure", e);
             showSnackbar("WebCamService: getNearby -> Failure: " + e.getMessage());
+        }
+    }
+    private void getRating(String id){
+        try{
+            ratingService.getRating(id);
+        }
+        catch(Exception e) {
+            Log.e("SunFinder", "RatingService: getRating -> Failure", e);
+            showSnackbar("RatingService: getRating -> Failure: " + e.getMessage());
         }
     }
 

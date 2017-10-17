@@ -27,6 +27,9 @@ public class Webcam implements Serializable {
     @SerializedName("location")
     @Expose
     private Location location;
+    @SerializedName("rating")
+    @Expose
+    private int rating;
 
     /**
      * No args constructor for use in serialization
@@ -40,14 +43,16 @@ public class Webcam implements Serializable {
      * @param location
      * @param status
      * @param image
+     * @param rating
      */
-    public Webcam(String id, String status, String title, Image image, Location location) {
+    public Webcam(String id, String status, String title, Image image, Location location, int rating) {
         super();
         this.id = id;
         this.status = status;
         this.title = title;
         this.image = image;
         this.location = location;
+        this.rating = rating;
     }
 
     public String getId() {
@@ -136,5 +141,11 @@ public class Webcam implements Serializable {
         Webcam rhs = ((Webcam) other);
         return new EqualsBuilder().append(id, rhs.id).append(title, rhs.title).append(location, rhs.location).append(status, rhs.status).append(image, rhs.image).isEquals();
     }
+    public int getRating() {
+        return rating  != 0 ? rating : 0;
+    }
 
+    public void setRating(int rating) {
+        this.rating = rating;
+    }
 }

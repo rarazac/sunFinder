@@ -5,7 +5,8 @@
     android:layout_height="match_parent"
     android:fitsSystemWindows="true"
     tools:context="ch.msengineering.sunfinder.LocationDetailActivity"
-    tools:ignore="MergeRootFrame">
+    tools:ignore="MergeRootFrame"
+    android:id="@+id/location_detail">
 
     <android.support.design.widget.AppBarLayout
         android:id="@+id/app_bar"
@@ -28,7 +29,27 @@
                 android:layout_width="match_parent"
                 android:layout_height="?attr/actionBarSize"
                 app:layout_collapseMode="pin"
-                app:popupTheme="@style/ThemeOverlay.AppCompat.Light" />
+                app:popupTheme="@style/ThemeOverlay.AppCompat.Light"/>
+
+            <RatingBar
+                android:id="@+id/ratingBar"
+                android:layout_width="327dp"
+                android:layout_height="wrap_content"
+                android:layout_gravity="bottom"
+                android:numStars="8"
+                android:rating="3.0"
+                android:stepSize="1.0"
+                android:visibility="visible"/>
+
+            <android.support.design.widget.FloatingActionButton
+                android:id="@+id/push_rating"
+                android:layout_width="209dp"
+                android:layout_height="wrap_content"
+                android:layout_gravity="bottom|right"
+                android:src="@drawable/rate_text" />
+
+
+
 
         </android.support.design.widget.CollapsingToolbarLayout>
 
@@ -39,26 +60,5 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         app:layout_behavior="@string/appbar_scrolling_view_behavior" />
-
-    <android.support.design.widget.FloatingActionButton
-        android:id="@+id/fab"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        tools:layout_width="match_parent"
-        android:scaleType="center"
-        android:src="@drawable/rate_text"
-        app:layout_anchor="@+id/app_bar"
-        app:layout_anchorGravity="bottom|end" />
-
-    <RatingBar
-        android:id="@+id/ratingBar"
-        android:layout_width="335dp"
-        android:layout_height="wrap_content"
-        android:numStars="8"
-        android:rating="3.0"
-        android:stepSize="1.0"
-        app:srcCompat="@android:drawable/stat_notify_chat"
-        app:layout_anchor="@+id/location_detail_container"
-        tools:layout_gravity="center" />
 
 </android.support.design.widget.CoordinatorLayout>

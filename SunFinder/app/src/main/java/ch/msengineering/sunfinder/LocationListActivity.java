@@ -119,6 +119,7 @@ public class LocationListActivity extends AppCompatActivity implements SearchVie
 
                     for(Webcam webcam : response.body().getResult().getWebcams()) {
                         LocationContent.addItem(LocationContent.createItem(webcam.getId(), webcam));
+                        getRating(webcam.getId());
                     }
 
                     RecyclerView recyclerView = (RecyclerView) findViewById(R.id.location_list);

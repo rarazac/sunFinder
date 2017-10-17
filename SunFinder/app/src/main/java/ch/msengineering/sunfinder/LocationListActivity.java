@@ -2,11 +2,14 @@ package ch.msengineering.sunfinder;
 
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.BitmapFactory;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.SearchView;
 import android.support.v7.widget.Toolbar;
@@ -15,10 +18,13 @@ import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.google.firebase.database.DatabaseError;
+import com.squareup.picasso.Picasso;
 
+import java.io.IOException;
+import java.net.URL;
 import java.util.List;
 
 import ch.msengineering.sunfinder.item.GeoContent;
@@ -34,7 +40,7 @@ import ch.msengineering.sunfinder.services.webcam.api.WebCamNearby;
 import ch.msengineering.sunfinder.services.webcam.api.Webcam;
 import retrofit2.Call;
 import retrofit2.Response;
-
+import com.google.firebase.database.DatabaseError;
 import static android.support.design.widget.BaseTransientBottomBar.LENGTH_LONG;
 
 /**
@@ -113,8 +119,6 @@ public class LocationListActivity extends AppCompatActivity implements SearchVie
 
                     for(Webcam webcam : response.body().getResult().getWebcams()) {
                         LocationContent.addItem(LocationContent.createItem(webcam.getId(), webcam));
-                        // request a rating for the webcam
-                        getRating(webcam.getId());
                     }
 
                     RecyclerView recyclerView = (RecyclerView) findViewById(R.id.location_list);
@@ -233,6 +237,9 @@ public class LocationListActivity extends AppCompatActivity implements SearchVie
 
     private void setupRecyclerView(@NonNull RecyclerView recyclerView) {
         recyclerView.setAdapter(new SimpleItemRecyclerViewAdapter(LocationContent.ITEMS));
+
+        DividerItemDecoration dividerItemDecoration = new DividerItemDecoration(recyclerView.getContext(), DividerItemDecoration.VERTICAL);
+        recyclerView.addItemDecoration(dividerItemDecoration);
     }
 
     public class SimpleItemRecyclerViewAdapter
@@ -254,8 +261,11 @@ public class LocationListActivity extends AppCompatActivity implements SearchVie
         @Override
         public void onBindViewHolder(final ViewHolder holder, int position) {
             holder.mItem = mValues.get(position);
-            holder.mIdView.setText(mValues.get(position).id);
-            holder.mContentView.setText(mValues.get(position).webCam.getTitle());
+            Picasso.with(LocationListActivity.this).load(mValues.get(position).webCam.getImage().getCurrent().getThumbnail()).into(holder.mImageView);
+            holder.mNameView.setText(mValues.get(position).webCam.getTitle());
+            holder.mCountryNameView.setText(mValues.get(position).webCam.getLocation().getCountry());
+            holder.mLatitudeView.setText(String.format("%s", mValues.get(position).webCam.getLocation().getLatitude()));
+            holder.mLongitudeView.setText(String.format("%s", mValues.get(position).webCam.getLocation().getLongitude()));
 
             holder.mView.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -286,20 +296,26 @@ public class LocationListActivity extends AppCompatActivity implements SearchVie
 
         public class ViewHolder extends RecyclerView.ViewHolder {
             public final View mView;
-            public final TextView mIdView;
-            public final TextView mContentView;
+            public final ImageView mImageView;
+            public final TextView mNameView;
+            public final TextView mCountryNameView;
+            public final TextView mLatitudeView;
+            public final TextView mLongitudeView;
             public LocationContent.LocationItem mItem;
 
             public ViewHolder(View view) {
                 super(view);
                 mView = view;
-                mIdView = view.findViewById(R.id.id);
-                mContentView = view.findViewById(R.id.content);
+                mImageView = view.findViewById(R.id.image);
+                mNameView = view.findViewById(R.id.name);
+                mCountryNameView = view.findViewById(R.id.country_name);
+                mLatitudeView = view.findViewById(R.id.latitude);
+                mLongitudeView = view.findViewById(R.id.longitude);
             }
 
             @Override
             public String toString() {
-                return super.toString() + " '" + mContentView.getText() + "'";
+                return super.toString() + " '" + mNameView.getText() + "'";
             }
         }
     }

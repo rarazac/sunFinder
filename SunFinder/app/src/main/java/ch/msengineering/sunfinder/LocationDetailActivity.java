@@ -1,13 +1,18 @@
 package ch.msengineering.sunfinder;
 
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
+import android.support.design.widget.FloatingActionButton;
+import android.support.design.widget.Snackbar;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 import android.widget.RatingBar;
+import android.view.View;
 
+import ch.msengineering.sunfinder.item.LocationContent;
 
 /**
  * An activity representing a single Location detail screen. This
@@ -23,6 +28,22 @@ public class LocationDetailActivity extends AppCompatActivity {
         setContentView(R.layout.activity_location_detail);
         Toolbar toolbar = (Toolbar) findViewById(R.id.detail_toolbar);
         setSupportActionBar(toolbar);
+
+        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
+        fab.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                LocationContent.LocationItem mItem = LocationContent.ITEM_MAP.get(getIntent().getStringExtra(LocationDetailFragment.ARG_ITEM_ID));
+                Uri gmmIntentUri = Uri.parse("geo:" + mItem.webCam.getLocation().getLatitude() + "," + mItem.webCam.getLocation().getLongitude() +
+                                "?q=" + mItem.webCam.getLocation().getLatitude() + "," + mItem.webCam.getLocation().getLongitude() + "(" + mItem.webCam.getTitle() + ")");
+                Intent mapIntent = new Intent(Intent.ACTION_VIEW, gmmIntentUri);
+                mapIntent.setPackage("com.google.android.apps.maps");
+                if (mapIntent.resolveActivity(getPackageManager()) != null) {
+                    startActivity(mapIntent);
+                }
+
+            }
+        });
 
         // Show the Up button in the action bar.
         ActionBar actionBar = getSupportActionBar();

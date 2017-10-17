@@ -39,11 +39,11 @@ public class GeoLocationServiceImpl implements GeoLocationService  {
         locationManager = (LocationManager) activity.getSystemService(LOCATION_SERVICE);
     }
 
-    public void getCurrentLocation() {
-        int refreshTimeMs = 1000 * 30;
+    public void getCurrentLocation() throws IOException {
+        int refreshTimeMs = 1000 * 5;
         int refreshDistanceMeter = 1000;
 
-        String bestProvider = locationManager.getBestProvider(new Criteria(), true);
+        final String bestProvider = locationManager.getBestProvider(new Criteria(), true);
 
         if (ActivityCompat.checkSelfPermission(activity, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(activity, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
             ActivityCompat.requestPermissions(activity, new String[]{Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION}, 1337);
@@ -52,6 +52,11 @@ public class GeoLocationServiceImpl implements GeoLocationService  {
                     refreshDistanceMeter, new LocationListener() {
                         @Override
                         public void onLocationChanged(Location location) {
+                            try {
+                                getGeoLocationByLongLat(bestProvider, location.getLatitude(), location.getLongitude());
+                            } catch (IOException e) {
+                                Log.e("SunFinder", "GeoLocationService: onLocationChanged -> Failure", e);
+                            }
                         }
 
                         @Override
@@ -70,7 +75,7 @@ public class GeoLocationServiceImpl implements GeoLocationService  {
 
         Location lastKnownLocation = locationManager.getLastKnownLocation(bestProvider);
         if (lastKnownLocation != null) {
-            localServiceConsumer.onGeoLocation(new GeoLocation(bestProvider, "Unknown", "Unknown", lastKnownLocation.getLatitude(), lastKnownLocation.getLongitude()));
+            getGeoLocationByLongLat(bestProvider, lastKnownLocation.getLatitude(), lastKnownLocation.getLongitude());
         } else {
             Log.w("SunFinder", "GeoLocationService: getCurrentLocation -> Warning: No last known location!");
             localServiceConsumer.onGeoLocation(createDummyGeoLocation());
@@ -99,6 +104,36 @@ public class GeoLocationServiceImpl implements GeoLocationService  {
             Log.w("SunFinder", "GeoLocationService: getGeoLocationByName -> Warning: Device does not have a Geocoder!");
             localServiceConsumer.onGeoLocation(createDummyGeoLocation());
         }
+    }
+
+    private void getGeoLocationByLongLat(String fallbackName, double latitude, double longitude) throws IOException {
+        if(Geocoder.isPresent()){
+            Geocoder gc = new Geocoder(activity);
+            List<Address> addresses= gc.getFromLocation(latitude, longitude, 10);
+
+            List<GeoLocation> geoLocations = new ArrayList<>(addresses.size());
+            for(Address a : addresses){
+                if(a.hasLatitude() && a.hasLongitude()){
+                    geoLocations.add(
+                            new GeoLocation(
+                                    a.getFeatureName(),
+                                    a.getCountryName(),
+                                    a.getCountryCode(),
+                                    a.getLatitude(),
+                                    a.getLongitude()));
+                }
+            }
+            localServiceConsumer.onGeoLocation(geoLocations);
+        } else {
+            Log.w("SunFinder", "GeoLocationService: getGeoLocationByName -> Warning: Device does not have a Geocoder!");
+            localServiceConsumer.onGeoLocation(createUnknownGeoLocation(fallbackName, latitude, longitude));
+        }
+    }
+
+    private List<GeoLocation> createUnknownGeoLocation(String name, double latitude, double longitude) {
+        List<GeoLocation> geoLocations = new ArrayList<>();
+        geoLocations.add(new GeoLocation(name, "Unknown", "Unknown", latitude, longitude));
+        return geoLocations;
     }
 
     private List<GeoLocation> createDummyGeoLocation() {

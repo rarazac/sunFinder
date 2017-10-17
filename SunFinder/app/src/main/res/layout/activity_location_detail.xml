@@ -5,7 +5,8 @@
     android:layout_height="match_parent"
     android:fitsSystemWindows="true"
     tools:context="ch.msengineering.sunfinder.LocationDetailActivity"
-    tools:ignore="MergeRootFrame">
+    tools:ignore="MergeRootFrame"
+    android:id="@+id/location_detail">
 
     <android.support.design.widget.AppBarLayout
         android:id="@+id/app_bar"
@@ -22,15 +23,6 @@
             app:contentScrim="?attr/colorPrimary"
             app:layout_scrollFlags="scroll|exitUntilCollapsed"
             app:toolbarId="@+id/toolbar">
-   <RatingBar
-                android:id="@+id/ratingBar"
-                android:layout_width="327dp"
-                android:layout_height="wrap_content"
-                android:layout_gravity="bottom"
-                android:numStars="8"
-                android:rating="3.0"
-                android:stepSize="1.0"
-                android:visibility="visible"/>
 
             <android.support.design.widget.FloatingActionButton
                 android:id="@+id/push_rating"
@@ -52,6 +44,16 @@
                 android:layout_height="match_parent"
                 android:background="@color/white"
                 android:scaleType="centerCrop" />
+
+            <RatingBar
+                         android:id="@+id/ratingBar"
+                         android:layout_width="327dp"
+                         android:layout_height="wrap_content"
+                         android:layout_gravity="bottom"
+                         android:numStars="8"
+                         android:rating="3.0"
+                         android:stepSize="1.0"
+                         android:visibility="visible" />
 
         </android.support.design.widget.CollapsingToolbarLayout>
 

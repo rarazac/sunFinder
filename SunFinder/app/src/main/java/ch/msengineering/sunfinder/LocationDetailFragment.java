@@ -48,9 +48,7 @@ public class LocationDetailFragment extends Fragment {
      * Mandatory empty constructor for the fragment manager to instantiate the
      * fragment (e.g. upon screen orientation changes).
      */
-    private RatingService ratingService;
-    private int ratingBarValue;
-    private RatingBar ratingBar;
+
     public LocationDetailFragment() {
     }
 
@@ -62,7 +60,6 @@ public class LocationDetailFragment extends Fragment {
         if (getArguments().containsKey(ARG_ITEM_ID)) {
             mItem = LocationContent.ITEM_MAP.get(getArguments().getString(ARG_ITEM_ID));
 
-            Activity activity = this.getActivity();
             CollapsingToolbarLayout appBarLayout = activity.findViewById(R.id.toolbar_layout);
             if (appBarLayout != null) {
                 appBarLayout.setTitle(mItem.webCam.getTitle());
@@ -72,53 +69,6 @@ public class LocationDetailFragment extends Fragment {
                 }
             }
         }
-
-        // ratingService
-        ratingService = new RatingServiceImplementation(new RatingServiceConsumer() {
-            @Override
-            public void onRatingSet(DatabaseError databaseError) {
-                // display result of rating push to the user
-                if (databaseError == null) {
-                    showSnackbar("thanks for your rating!");
-                } else {
-                    showSnackbar("sorry, your rating could not be published");
-                }
-            }
-
-            @Override
-            public void onRatingGet(String id , int ratingValue) {
-                // we have to update the rating bar according to the rating from the database
-                ratingBar.setRating(ratingValue);
-                Log.v("sunFinder","onRatingGet setting ratinBar value: id="+id + "rating=" + ratingValue);
-
-            }
-
-            @Override
-            public void onFailure(DatabaseError databaseError) {
-                Log.e("SunFinder", "RatingService: onFailure -> Failure: ",databaseError.toException());
-            }
-        });
-
-        // pushButton, if we are in tablet mode we dont find the push_rating button because
-        // the activity is wrong!
-        FloatingActionButton fab = activity.findViewById(R.id.push_rating);
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                setRating(mItem.id, ratingBarValue);
-            }
-        });
-
-        // ratingBar
-        ratingBar =  activity.findViewById(R.id.ratingBar);
-        getRating(mItem.id);
-        ratingBar.setOnRatingBarChangeListener(new RatingBar.OnRatingBarChangeListener() {
-            public void onRatingChanged(RatingBar ratingBar, float rating,
-                                        boolean fromUser) {
-                // we use only int values in the database
-                ratingBarValue = Math.round(rating);
-            }
-        });
     }
 
     @Override
@@ -143,28 +93,5 @@ public class LocationDetailFragment extends Fragment {
         cal.setTimeInMillis(time * 1000);
         String date = DateFormat.format("dd.MM.yyyy HH:mm:ss", cal).toString();
         return date;
-    }
-
-    // uses ratingService to set the rating of webcam with id: id
-    private void setRating(String id, int ratingValue) {
-        try {
-            ratingService.setRating(id, ratingValue);
-        } catch (Exception e) {
-            Log.e("SunFinder", "ratingService: setRating -> Failure", e);
-        }
-    }
-
-    // uses ratingService to get the rating of webcam with id: id
-    private void getRating(String id) {
-        try {
-            ratingService.getRating(id);
-        } catch (Exception e) {
-            Log.e("SunFinder", "ratingService: getRating -> Failure", e);
-        }
-    }
-
-    // helper for Snackbar
-    private void showSnackbar(final String message) {
-        Snackbar.make(getView().findViewById(R.id.location_detail), message, LENGTH_LONG).show();
     }
 }

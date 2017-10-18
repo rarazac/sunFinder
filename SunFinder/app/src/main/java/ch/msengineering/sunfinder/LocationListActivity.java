@@ -20,7 +20,13 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.AuthResult;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.squareup.picasso.Picasso;
 
 import java.io.IOException;
@@ -72,12 +78,14 @@ public class LocationListActivity extends AppCompatActivity implements SearchVie
     private GeoLocation lastSearchedLocation;
     private int lastRadiusKm;
     private RatingService ratingService;
+    private FirebaseAuth mAuth;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_location_list);
-
+// ...
+        mAuth = FirebaseAuth.getInstance();
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         toolbar.setTitle(getTitle());
@@ -140,7 +148,7 @@ public class LocationListActivity extends AppCompatActivity implements SearchVie
         ratingService = new RatingServiceImplementation(new RatingServiceConsumer() {
             @Override
             public void onRatingSet(DatabaseError databaseError) {
-                // dont need this here, we can only rate in LocationDetailFragment
+                // dont need this here, we can only rate in LocationDetailActivity
             }
 
             @Override
@@ -178,7 +186,32 @@ public class LocationListActivity extends AppCompatActivity implements SearchVie
             getWebCamNearby(geoItem.geoLocation, INITIAL_RADIUS_OF_SEARCH_KM);
         }
     }
-
+    // login to firebase db before we start any service
+    // see https://github.com/firebase/quickstart-android/blob/master/auth/app/src/main/java/com/google/firebase/quickstart/auth/AnonymousAuthActivity.java#L83-L104
+    @Override
+    public void onStart() {
+        super.onStart();
+        // Check if user is signed in (non-null) and update UI accordingly.
+        FirebaseUser currentUser = mAuth.getCurrentUser();   // [START signin_anonymously]
+        mAuth.signInAnonymously()
+                .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
+                    @Override
+                    public void onComplete(@NonNull Task<AuthResult> task) {
+                        if (task.isSuccessful()) {
+                            // Sign in success, update UI with the signed-in user's information
+                            Log.d("sunFinder", "signInAnonymously:success");
+                            FirebaseUser user = mAuth.getCurrentUser();
+                        } else {
+                            // If sign in fails, display a message to the user.
+                            Log.w("sunFinder", "signInAnonymously:failure", task.getException());
+                            Toast.makeText(getApplicationContext(), "Authentication failed.",
+                                    Toast.LENGTH_SHORT).show();
+                        }
+                        // [END_EXCLUDE]
+                    }
+                });
+// [END signin_anonymously]
+    }
     private void getWebCamNearby(GeoLocation geoLocation, int radiusOfSearchKm) {
         try {
             lastSearchedLocation = geoLocation;

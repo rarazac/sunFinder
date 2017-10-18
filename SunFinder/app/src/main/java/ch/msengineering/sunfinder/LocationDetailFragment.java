@@ -3,8 +3,6 @@ package ch.msengineering.sunfinder;
 import android.app.Activity;
 import android.os.Bundle;
 import android.support.design.widget.CollapsingToolbarLayout;
-import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.text.format.DateFormat;
 import android.view.LayoutInflater;
@@ -12,20 +10,15 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
-import com.google.firebase.database.DatabaseError;
 
 import ch.msengineering.sunfinder.item.LocationContent;
-import ch.msengineering.sunfinder.services.RatingServiceConsumer;
-import ch.msengineering.sunfinder.services.rating.RatingService;
-import ch.msengineering.sunfinder.services.rating.RatingServiceImplementation;
-import static android.support.design.widget.BaseTransientBottomBar.LENGTH_LONG;
+
 
 import com.squareup.picasso.Picasso;
 
 import java.util.Calendar;
 import java.util.Locale;
-import android.util.Log;
-import android.widget.RatingBar;
+
 /**
  * A fragment representing a single Location detail screen.
  * This fragment is either contained in a {@link LocationListActivity}

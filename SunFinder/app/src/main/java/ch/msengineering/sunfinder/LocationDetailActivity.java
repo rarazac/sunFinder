@@ -80,8 +80,8 @@ public class LocationDetailActivity extends AppCompatActivity {
                 Log.e("SunFinder", "RatingService: onFailure -> Failure: ",databaseError.toException());
             }
         });
-        // pushButton, if we are in tablet mode we dont find the push_rating button because
-        // the activity is wrong!
+
+        // rating is only pushed when this button is pressed
         FloatingActionButton fab2 = (FloatingActionButton) findViewById(R.id.push_rating);
         fab2.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -100,6 +100,7 @@ public class LocationDetailActivity extends AppCompatActivity {
                 ratingBarValue = Math.round(rating);
             }
         });
+
         // Show the Up button in the action bar.
         ActionBar actionBar = getSupportActionBar();
         if (actionBar != null) {

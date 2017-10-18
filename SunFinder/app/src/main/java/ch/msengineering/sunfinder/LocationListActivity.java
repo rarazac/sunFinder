@@ -29,8 +29,6 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.squareup.picasso.Picasso;
 
-import java.io.IOException;
-import java.net.URL;
 import java.util.List;
 
 import ch.msengineering.sunfinder.item.GeoContent;
@@ -40,6 +38,7 @@ import ch.msengineering.sunfinder.services.WebServiceConsumer;
 import ch.msengineering.sunfinder.services.geolocation.api.GeoLocation;
 import ch.msengineering.sunfinder.services.rating.RatingService;
 import ch.msengineering.sunfinder.services.rating.RatingServiceImplementation;
+import ch.msengineering.sunfinder.services.rating.api.Rating;
 import ch.msengineering.sunfinder.services.webcam.WebCamService;
 import ch.msengineering.sunfinder.services.webcam.WebCamServiceImpl;
 import ch.msengineering.sunfinder.services.webcam.api.WebCamNearby;
@@ -127,6 +126,7 @@ public class LocationListActivity extends AppCompatActivity implements SearchVie
 
                     for(Webcam webcam : response.body().getResult().getWebcams()) {
                         LocationContent.addItem(LocationContent.createItem(webcam.getId(), webcam));
+                        // check if we have a rating for every webcam we find
                         getRating(webcam.getId());
                     }
 
@@ -152,13 +152,24 @@ public class LocationListActivity extends AppCompatActivity implements SearchVie
             }
 
             @Override
-            public void onRatingGet(String id, int ratingValue) {
-                // Add all ratings from the database to the corresponding webcam
+            public void onRatingGet(Rating rating) {
+                int ts;
+                Long tsLong;
                 for(int i = 0; i < LocationContent.ITEMS.size(); i++) {
-                    if(LocationContent.ITEMS.get(i).webCam.getId().equals(id)) {
+                    if(LocationContent.ITEMS.get(i).webCam.getId().equals(rating.getId())) {
                         // we found the webcam which has the same id as one in the db, set the rating
-                        LocationContent.ITEMS.get(i).webCam.setRating(ratingValue);
-                        Log.v("sunFinder", "LocationListActivity.onRatingGet(); id = " + id + "rating = " + ratingValue);
+                        LocationContent.ITEMS.get(i).webCam.setRating(rating.getRatingValue());
+                        // check if timeStamp is not too old
+                        tsLong = System.currentTimeMillis() / 1000;
+                        ts = tsLong.intValue();
+                        if ((ts - rating.getTimeStamp()) < 3600) {
+                            // timeStamp is not older than 1h ( 1h = 60min*60sec = 3600s
+                            Log.v("sunFinder", "LocationListActivity.onRatingGet(); "
+                                    + "id = " + rating.getId() + "  "
+                                    + "ratingValue = " + rating.getRatingValue() + "  "
+                                    + "timeStamp = " + rating.getTimeStamp() );
+                            //TODO add information to UI
+                        }
                     }
                 }
             }
@@ -191,8 +202,7 @@ public class LocationListActivity extends AppCompatActivity implements SearchVie
     @Override
     public void onStart() {
         super.onStart();
-        // Check if user is signed in (non-null) and update UI accordingly.
-        FirebaseUser currentUser = mAuth.getCurrentUser();   // [START signin_anonymously]
+
         mAuth.signInAnonymously()
                 .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
                     @Override
@@ -207,10 +217,8 @@ public class LocationListActivity extends AppCompatActivity implements SearchVie
                             Toast.makeText(getApplicationContext(), "Authentication failed.",
                                     Toast.LENGTH_SHORT).show();
                         }
-                        // [END_EXCLUDE]
                     }
                 });
-// [END signin_anonymously]
     }
     private void getWebCamNearby(GeoLocation geoLocation, int radiusOfSearchKm) {
         try {

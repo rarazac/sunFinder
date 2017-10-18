@@ -19,6 +19,7 @@ import ch.msengineering.sunfinder.item.LocationContent;
 import ch.msengineering.sunfinder.services.RatingServiceConsumer;
 import ch.msengineering.sunfinder.services.rating.RatingService;
 import ch.msengineering.sunfinder.services.rating.RatingServiceImplementation;
+import ch.msengineering.sunfinder.services.rating.api.Rating;
 
 import static android.support.design.widget.BaseTransientBottomBar.LENGTH_LONG;
 
@@ -68,11 +69,19 @@ public class LocationDetailActivity extends AppCompatActivity {
             }
 
             @Override
-            public void onRatingGet(String id , int ratingValue) {
+            public void onRatingGet(Rating rating) {
                 // we have to update the rating bar according to the rating from the database
-                ratingBar.setRating(ratingValue);
-                Log.v("sunFinder","onRatingGet setting ratinBar value: id="+id + "rating=" + ratingValue);
-
+                Log.v("sunFinder", "LocationDetailActivity.onRatingGet(); "
+                        + "id = " + rating.getId() + "  "
+                        + "ratingValue = " + rating.getRatingValue() + "  "
+                        + "timeStamp = " + rating.getTimeStamp());
+                // check if timeStamp is not too old
+                Long tsLong = System.currentTimeMillis() / 1000;
+                int ts = tsLong.intValue();
+                if ((ts - rating.getTimeStamp()) < 3600) {
+                    // timeStamp is not older than 1h ( 1h = 60min*60sec = 3600s
+                    ratingBar.setRating(rating.getRatingValue());
+                }
             }
 
             @Override

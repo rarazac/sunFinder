@@ -24,12 +24,6 @@
             app:layout_scrollFlags="scroll|exitUntilCollapsed"
             app:toolbarId="@+id/toolbar">
 
-            <android.support.design.widget.FloatingActionButton
-                android:id="@+id/push_rating"
-                android:layout_width="209dp"
-                android:layout_height="wrap_content"
-                android:layout_gravity="bottom|right"
-                android:src="@drawable/rate_text" />
 
             <android.support.v7.widget.Toolbar
                 android:id="@+id/detail_toolbar"
@@ -45,15 +39,6 @@
                 android:background="@color/white"
                 android:scaleType="centerCrop" />
 
-            <RatingBar
-                         android:id="@+id/ratingBar"
-                         android:layout_width="327dp"
-                         android:layout_height="wrap_content"
-                         android:layout_gravity="bottom"
-                         android:numStars="8"
-                         android:rating="3.0"
-                         android:stepSize="1.0"
-                         android:visibility="visible" />
 
         </android.support.design.widget.CollapsingToolbarLayout>
 

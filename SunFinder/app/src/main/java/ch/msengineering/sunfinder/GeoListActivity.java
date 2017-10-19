@@ -181,6 +181,7 @@ public class GeoListActivity extends AppCompatActivity implements SearchView.OnQ
                     intent.putExtra(LocationListActivity.ARG_LIST_ID, holder.mItem.id);
 
                     context.startActivity(intent);
+
                 }
             });
         }

@@ -4,24 +4,14 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.MenuItem;
-import android.widget.RatingBar;
 import android.view.View;
 
-import com.google.firebase.database.DatabaseError;
-
 import ch.msengineering.sunfinder.item.LocationContent;
-import ch.msengineering.sunfinder.services.RatingServiceConsumer;
-import ch.msengineering.sunfinder.services.rating.RatingService;
-import ch.msengineering.sunfinder.services.rating.RatingServiceImplementation;
-import ch.msengineering.sunfinder.services.rating.api.Rating;
 
-import static android.support.design.widget.BaseTransientBottomBar.LENGTH_LONG;
 
 /**
  * An activity representing a single Location detail screen. This
@@ -30,9 +20,7 @@ import static android.support.design.widget.BaseTransientBottomBar.LENGTH_LONG;
  * in a {@link LocationListActivity}.
  */
 public class LocationDetailActivity extends AppCompatActivity {
-    private RatingService ratingService;
-    private int ratingBarValue;
-    private RatingBar ratingBar;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -54,59 +42,6 @@ public class LocationDetailActivity extends AppCompatActivity {
                     startActivity(mapIntent);
                 }
 
-            }
-        });
-        // ratingService
-        ratingService = new RatingServiceImplementation(new RatingServiceConsumer() {
-            @Override
-            public void onRatingSet(DatabaseError databaseError) {
-                // display result of rating push to the user
-                if (databaseError == null) {
-                    showSnackbar("thanks for your rating!");
-                } else {
-                    showSnackbar("sorry, your rating could not be published");
-                }
-            }
-
-            @Override
-            public void onRatingGet(Rating rating) {
-                // we have to update the rating bar according to the rating from the database
-                Log.v("sunFinder", "LocationDetailActivity.onRatingGet(); "
-                        + "id = " + rating.getId() + "  "
-                        + "ratingValue = " + rating.getRatingValue() + "  "
-                        + "timeStamp = " + rating.getTimeStamp());
-                // check if timeStamp is not too old
-                Long tsLong = System.currentTimeMillis() / 1000;
-                int ts = tsLong.intValue();
-                if ((ts - rating.getTimeStamp()) < 3600) {
-                    // timeStamp is not older than 1h ( 1h = 60min*60sec = 3600s
-                    ratingBar.setRating(rating.getRatingValue());
-                }
-            }
-
-            @Override
-            public void onFailure(DatabaseError databaseError) {
-                Log.e("SunFinder", "RatingService: onFailure -> Failure: ",databaseError.toException());
-            }
-        });
-
-        // rating is only pushed when this button is pressed
-        FloatingActionButton fab2 = (FloatingActionButton) findViewById(R.id.push_rating);
-        fab2.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                setRating(mItem.id, ratingBarValue);
-            }
-        });
-
-        // ratingBar
-        ratingBar =  (RatingBar) findViewById(R.id.ratingBar);
-        getRating(mItem.id);
-        ratingBar.setOnRatingBarChangeListener(new RatingBar.OnRatingBarChangeListener() {
-            public void onRatingChanged(RatingBar ratingBar, float rating,
-                                        boolean fromUser) {
-                // we use only int values in the database
-                ratingBarValue = Math.round(rating);
             }
         });
 
@@ -155,28 +90,5 @@ public class LocationDetailActivity extends AppCompatActivity {
             return true;
         }
         return super.onOptionsItemSelected(item);
-    }
-
-    // uses ratingService to set the rating of webcam with id: id
-    private void setRating(String id, int ratingValue) {
-        try {
-            ratingService.setRating(id, ratingValue);
-        } catch (Exception e) {
-            Log.e("SunFinder", "ratingService: setRating -> Failure", e);
-        }
-    }
-
-    // uses ratingService to get the rating of webcam with id: id
-    private void getRating(String id) {
-        try {
-            ratingService.getRating(id);
-        } catch (Exception e) {
-            Log.e("SunFinder", "ratingService: getRating -> Failure", e);
-        }
-    }
-
-    // helper for Snackbar
-    private void showSnackbar(final String message) {
-        Snackbar.make(findViewById(R.id.location_detail), message, LENGTH_LONG).show();
     }
 }

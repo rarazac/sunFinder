@@ -37,6 +37,7 @@ public class RatingServiceImplementation implements RatingService {
      *          - ratingValue:value3
      *          - timeStamp: ts_UTC
      */
+
     public void setRating(String id, int ratingValue){
         mDatabase = FirebaseDatabase.getInstance().getReference();
 

@@ -2,12 +2,9 @@ package ch.msengineering.sunfinder;
 
 import android.content.Context;
 import android.content.Intent;
-import android.graphics.BitmapFactory;
-import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.Snackbar;
-import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.RecyclerView;
@@ -15,10 +12,10 @@ import android.support.v7.widget.SearchView;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.LayoutInflater;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.RatingBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -28,7 +25,6 @@ import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.squareup.picasso.Picasso;
-
 import java.util.List;
 
 import ch.msengineering.sunfinder.item.GeoContent;
@@ -78,7 +74,7 @@ public class LocationListActivity extends AppCompatActivity implements SearchVie
     private int lastRadiusKm;
     private RatingService ratingService;
     private FirebaseAuth mAuth;
-
+    private RecyclerView recyclerView;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -92,7 +88,7 @@ public class LocationListActivity extends AppCompatActivity implements SearchVie
         SearchView searchView = (SearchView) findViewById(R.id.search_view);
         searchView.setOnQueryTextListener(this);
 
-        RecyclerView recyclerView = (RecyclerView) findViewById(R.id.location_list);
+        recyclerView = (RecyclerView) findViewById(R.id.location_list);
         assert recyclerView != null;
         setupRecyclerView(recyclerView);
 
@@ -123,9 +119,9 @@ public class LocationListActivity extends AppCompatActivity implements SearchVie
                         // check if we have a rating for every webcam we find
                         getRating(webcam.getId());
                     }
-
                     RecyclerView recyclerView = (RecyclerView) findViewById(R.id.location_list);
                     recyclerView.getAdapter().notifyDataSetChanged();
+
                 } else {
                     Log.e("SunFinder", "WebCamService: onWebCamNearby -> Failure: " + response.toString());
                     showSnackbar("WebCamService: onWebCamNearby -> Failure: " + response.toString());
@@ -151,8 +147,6 @@ public class LocationListActivity extends AppCompatActivity implements SearchVie
                 Long tsLong;
                 for(int i = 0; i < LocationContent.ITEMS.size(); i++) {
                     if(LocationContent.ITEMS.get(i).webCam.getId().equals(rating.getId())) {
-                        // we found the webcam which has the same id as one in the db, set the rating
-                        LocationContent.ITEMS.get(i).webCam.setRating(rating.getRatingValue());
                         // check if timeStamp is not too old
                         tsLong = System.currentTimeMillis() / 1000;
                         ts = tsLong.intValue();
@@ -161,8 +155,11 @@ public class LocationListActivity extends AppCompatActivity implements SearchVie
                             Log.v("sunFinder", "LocationListActivity.onRatingGet(); "
                                     + "id = " + rating.getId() + "  "
                                     + "ratingValue = " + rating.getRatingValue() + "  "
-                                    + "timeStamp = " + rating.getTimeStamp() );
-                            //TODO add information to UI
+                                    + "timeStamp = " + rating.getTimeStamp());
+                            // we found the webcam which has the same id as one in the db, set the rating
+                            Webcam webcam = LocationContent.ITEMS.get(i).webCam;
+                            webcam.setRating(rating.getRatingValue());
+                            recyclerView.getAdapter().notifyItemChanged(i);
                         }
                     }
                 }
@@ -173,11 +170,6 @@ public class LocationListActivity extends AppCompatActivity implements SearchVie
             }
         });
 
-        if (getIntent() != null && getIntent().getExtras() != null &&
-                getIntent().getExtras().containsKey("home") && getIntent().getExtras().getBoolean("home")) {
-
-            return;
-        }
 
         if (getIntent() != null && getIntent().getExtras() != null &&
                 getIntent().getExtras().containsKey(ARG_LIST_ID)) {
@@ -198,22 +190,33 @@ public class LocationListActivity extends AppCompatActivity implements SearchVie
         super.onStart();
 
         mAuth.signInAnonymously()
-                .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
-                    @Override
-                    public void onComplete(@NonNull Task<AuthResult> task) {
-                        if (task.isSuccessful()) {
-                            // Sign in success, update UI with the signed-in user's information
-                            Log.d("sunFinder", "signInAnonymously:success");
-                            FirebaseUser user = mAuth.getCurrentUser();
-                        } else {
-                            // If sign in fails, display a message to the user.
-                            Log.w("sunFinder", "signInAnonymously:failure", task.getException());
-                            Toast.makeText(getApplicationContext(), "Authentication failed.",
-                                    Toast.LENGTH_SHORT).show();
-                        }
+            .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
+                @Override
+                public void onComplete(@NonNull Task<AuthResult> task) {
+                    if (task.isSuccessful()) {
+                        // Sign in success, update UI with the signed-in user's information
+                        Log.d("sunFinder", "signInAnonymously:success");
+                        FirebaseUser user = mAuth.getCurrentUser();
+                    } else {
+                        // If sign in fails, display a message to the user.
+                        Log.w("sunFinder", "signInAnonymously:failure", task.getException());
+                        Toast.makeText(getApplicationContext(), "Authentication failed.",
+                                Toast.LENGTH_SHORT).show();
                     }
-                });
+                }
+            });
     }
+
+    @Override
+    public  void onResume(){
+        super.onResume();
+        // update webcams and ratings when coming back from detail view or search view
+        GeoContent.GeoItem geoItem = GeoContent.ITEM_MAP.get(getIntent().getExtras().getString(ARG_LIST_ID));
+
+        getWebCamNearby(geoItem.geoLocation, INITIAL_RADIUS_OF_SEARCH_KM);
+
+    }
+
     private void getWebCamNearby(GeoLocation geoLocation, int radiusOfSearchKm) {
         try {
             lastSearchedLocation = geoLocation;
@@ -224,6 +227,7 @@ public class LocationListActivity extends AppCompatActivity implements SearchVie
             showSnackbar("WebCamService: getNearby -> Failure: " + e.getMessage());
         }
     }
+
     private void getRating(String id){
         try{
             ratingService.getRating(id);
@@ -263,10 +267,20 @@ public class LocationListActivity extends AppCompatActivity implements SearchVie
     public class SimpleItemRecyclerViewAdapter
             extends RecyclerView.Adapter<SimpleItemRecyclerViewAdapter.ViewHolder> {
 
-        private final List<LocationContent.LocationItem> mValues;
+        private List<LocationContent.LocationItem> mValues;
 
         public SimpleItemRecyclerViewAdapter(List<LocationContent.LocationItem> items) {
+            // add with mValues.add() otherwise recyclerView.getAdapter().notifyItemChanged(i)
+            // does not work!
             mValues = items;
+            mValues.clear();
+            for(int i = 0; i < items.size(); i++){
+                mValues.add(i,items.get(i));
+            }
+        }
+        public void updateList(List<LocationContent.LocationItem> items) {
+            mValues = items;
+            notifyDataSetChanged();
         }
 
         @Override
@@ -284,7 +298,7 @@ public class LocationListActivity extends AppCompatActivity implements SearchVie
             holder.mCountryNameView.setText(mValues.get(position).webCam.getLocation().getCountry());
             holder.mLatitudeView.setText(String.format("%s", mValues.get(position).webCam.getLocation().getLatitude()));
             holder.mLongitudeView.setText(String.format("%s", mValues.get(position).webCam.getLocation().getLongitude()));
-
+            holder.mRatingBar.setRating(mValues.get(position).webCam.getRating());
             holder.mView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -320,6 +334,7 @@ public class LocationListActivity extends AppCompatActivity implements SearchVie
             public final TextView mLatitudeView;
             public final TextView mLongitudeView;
             public LocationContent.LocationItem mItem;
+            public final RatingBar mRatingBar;
 
             public ViewHolder(View view) {
                 super(view);
@@ -329,6 +344,7 @@ public class LocationListActivity extends AppCompatActivity implements SearchVie
                 mCountryNameView = view.findViewById(R.id.country_name);
                 mLatitudeView = view.findViewById(R.id.latitude);
                 mLongitudeView = view.findViewById(R.id.longitude);
+                mRatingBar = view.findViewById(R.id.ratingBar);
             }
 
             @Override

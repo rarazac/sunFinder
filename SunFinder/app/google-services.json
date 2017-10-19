@@ -1,0 +1,55 @@
+{
+  "project_info": {
+    "project_number": "43112355645",
+    "firebase_url": "https://mobob-93dc8.firebaseio.com",
+    "project_id": "mobob-93dc8",
+    "storage_bucket": "mobob-93dc8.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:43112355645:android:6e8fe608cb28e8d7",
+        "android_client_info": {
+          "package_name": "ch.msengineering.sunfinder"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "43112355645-5qe3pefeigu4biqdrmudkuu8mjoeqpe1.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "ch.msengineering.sunfinder",
+            "certificate_hash": "f9ae17b662316eadd7cc69c4b29c5d3f6bc57aa1"
+          }
+        },
+        {
+          "client_id": "43112355645-ik9d768ad2d64lap3m8tpplm8r67afrp.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyA3BguuMqnPKV_rtK449yLM9oJmiPt_OCM"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 2,
+          "other_platform_oauth_client": [
+            {
+              "client_id": "43112355645-ik9d768ad2d64lap3m8tpplm8r67afrp.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

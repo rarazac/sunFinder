@@ -104,12 +104,6 @@ public class LocationListActivity extends AppCompatActivity implements SearchVie
             mTwoPane = true;
         }
 
-        // Show the Up button in the action bar.
-        ActionBar actionBar = getSupportActionBar();
-        if (actionBar != null) {
-            actionBar.setDisplayHomeAsUpEnabled(true);
-        }
-
         webCamService = new WebCamServiceImpl(new WebServiceConsumer() {
             @Override
             public void onWebCamNearby(Response<WebCamNearby> response) {
@@ -238,24 +232,6 @@ public class LocationListActivity extends AppCompatActivity implements SearchVie
             Log.e("SunFinder", "RatingService: getRating -> Failure", e);
             showSnackbar("RatingService: getRating -> Failure: " + e.getMessage());
         }
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        int id = item.getItemId();
-        if (id == android.R.id.home) {
-            // This ID represents the Home or Up button. In the case of this
-            // activity, the Up button is shown. For
-            // more details, see the Navigation pattern on Android Design:
-            //
-            // http://developer.android.com/design/patterns/navigation.html#up-vs-back
-            //
-            Intent intent = new Intent(this, GeoListActivity.class);
-            intent.putExtra("home", true);
-            navigateUpTo(intent);
-            return true;
-        }
-        return super.onOptionsItemSelected(item);
     }
 
     @Override

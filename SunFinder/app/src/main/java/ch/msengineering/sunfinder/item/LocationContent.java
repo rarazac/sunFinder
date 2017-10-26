@@ -102,13 +102,15 @@ public class LocationContent {
         }
 
         boolean filter(String query) {
-            return id.toLowerCase().contains(query) ||
+            if (query == null) return false;
+            String lowerCaseQuery = query.toLowerCase();
+            return id.toLowerCase().contains(lowerCaseQuery) ||
                     (webCam != null && (
-                            webCam.getId().toLowerCase().contains(query) ||
-                                    webCam.getTitle().toLowerCase().contains(query) ||
+                            webCam.getId().toLowerCase().contains(lowerCaseQuery) ||
+                                    webCam.getTitle().toLowerCase().contains(lowerCaseQuery) ||
                                     (webCam.getLocation() != null && (
-                                            (Double.toString(webCam.getLocation().getLongitude())).toLowerCase().contains(query) ||
-                                                    (Double.toString(webCam.getLocation().getLatitude())).toLowerCase().contains(query)
+                                            (Double.toString(webCam.getLocation().getLongitude())).toLowerCase().contains(lowerCaseQuery) ||
+                                                    (Double.toString(webCam.getLocation().getLatitude())).toLowerCase().contains(lowerCaseQuery)
                                     ))
                     ));
         }

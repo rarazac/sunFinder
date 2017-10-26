@@ -11,7 +11,7 @@ import java.io.Serializable;
 
 public class WebCamNearby implements Serializable {
 
-    private final static long serialVersionUID = -5083114106067000958L;
+    private static final long serialVersionUID = -5083114106067000958L;
     @SerializedName("status")
     @Expose
     private String status;
@@ -76,7 +76,7 @@ public class WebCamNearby implements Serializable {
         if (other == this) {
             return true;
         }
-        if ((other instanceof WebCamNearby) == false) {
+        if (!(other instanceof WebCamNearby)) {
             return false;
         }
         WebCamNearby rhs = ((WebCamNearby) other);

@@ -102,13 +102,15 @@ public class GeoContent {
         }
 
         boolean filter(String query) {
-            return id.toLowerCase().contains(query) ||
+            if (query == null) return false;
+            String lowerCaseQuery = query.toLowerCase();
+            return id.toLowerCase().contains(lowerCaseQuery) ||
                     (geoLocation != null && (
-                            geoLocation.getName().toLowerCase().contains(query) ||
-                                    geoLocation.getCountryCode().toLowerCase().contains(query) ||
-                                    geoLocation.getCountryName().toLowerCase().contains(query) ||
-                                    (Double.toString(geoLocation.getLongitude())).toLowerCase().contains(query) ||
-                                    (Double.toString(geoLocation.getLatitude())).toLowerCase().contains(query)
+                            geoLocation.getName().toLowerCase().contains(lowerCaseQuery) ||
+                                    geoLocation.getCountryCode().toLowerCase().contains(lowerCaseQuery) ||
+                                    geoLocation.getCountryName().toLowerCase().contains(lowerCaseQuery) ||
+                                    (Double.toString(geoLocation.getLongitude())).toLowerCase().contains(lowerCaseQuery) ||
+                                    (Double.toString(geoLocation.getLatitude())).toLowerCase().contains(lowerCaseQuery)
                     ));
         }
 

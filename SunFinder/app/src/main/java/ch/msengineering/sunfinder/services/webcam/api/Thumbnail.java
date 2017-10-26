@@ -11,7 +11,7 @@ import java.io.Serializable;
 
 public class Thumbnail implements Serializable {
 
-    private final static long serialVersionUID = -2816114992923301472L;
+    private static final long serialVersionUID = -2816114992923301472L;
     @SerializedName("width")
     @Expose
     private long width;
@@ -76,7 +76,7 @@ public class Thumbnail implements Serializable {
         if (other == this) {
             return true;
         }
-        if ((other instanceof Thumbnail) == false) {
+        if (!(other instanceof Thumbnail)) {
             return false;
         }
         Thumbnail rhs = ((Thumbnail) other);

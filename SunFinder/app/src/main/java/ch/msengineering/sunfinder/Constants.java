@@ -10,6 +10,8 @@ public class Constants {
 
     public static final String DB_ROOT = "webcams";
 
+    public static final String ENDPOINT = "https://webcamstravel.p.mashape.com";
+
     private Constants() {
         //Hide default constructor
     }

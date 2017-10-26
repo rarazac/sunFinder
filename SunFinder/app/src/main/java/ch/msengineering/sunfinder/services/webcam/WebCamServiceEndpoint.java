@@ -12,8 +12,6 @@ import retrofit2.http.Path;
 
 public interface WebCamServiceEndpoint {
 
-    String ENDPOINT = "https://webcamstravel.p.mashape.com";
-
     @Headers("X-Mashape-Key: E9HH1DLtG1mshXjkbHOWttJ7BXTYp1zSzxOjsnowvONkzPP54P")
     @GET("/webcams/list/nearby={lat},{lng},{radius}?lang=en&show=webcams:image,location,categories,continents,countries,regions,properties")
     Call<WebCamNearby> getNearby(@Path("lat") double latitude, @Path("lng") double longitude, @Path("radius") int radius);

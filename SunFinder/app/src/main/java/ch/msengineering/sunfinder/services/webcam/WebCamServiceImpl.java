@@ -11,6 +11,8 @@ import retrofit2.Response;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
+import static ch.msengineering.sunfinder.Constants.ENDPOINT;
+
 /**
  * Created by raphe on 09/10/2017.
  */
@@ -28,7 +30,7 @@ public class WebCamServiceImpl implements WebCamService, Callback<WebCamNearby> 
                 .create();
 
         Retrofit retrofit = new Retrofit.Builder()
-                .baseUrl(WebCamServiceEndpoint.ENDPOINT)
+                .baseUrl(ENDPOINT)
                 .addConverterFactory(GsonConverterFactory.create(gson))
                 .build();
 

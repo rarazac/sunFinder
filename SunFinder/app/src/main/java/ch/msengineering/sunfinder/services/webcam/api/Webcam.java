@@ -11,7 +11,7 @@ import java.io.Serializable;
 
 public class Webcam implements Serializable {
 
-    private final static long serialVersionUID = 2558334477494528796L;
+    private static final long serialVersionUID = 2558334477494528796L;
     @SerializedName("id")
     @Expose
     private String id;
@@ -135,7 +135,7 @@ public class Webcam implements Serializable {
         if (other == this) {
             return true;
         }
-        if ((other instanceof Webcam) == false) {
+        if (!(other instanceof Webcam)) {
             return false;
         }
         Webcam rhs = ((Webcam) other);

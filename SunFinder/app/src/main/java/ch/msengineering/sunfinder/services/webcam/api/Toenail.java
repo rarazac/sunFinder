@@ -11,7 +11,7 @@ import java.io.Serializable;
 
 public class Toenail implements Serializable {
 
-    private final static long serialVersionUID = 1366701662728837988L;
+    private static final long serialVersionUID = 1366701662728837988L;
     @SerializedName("width")
     @Expose
     private long width;
@@ -76,7 +76,7 @@ public class Toenail implements Serializable {
         if (other == this) {
             return true;
         }
-        if ((other instanceof Toenail) == false) {
+        if (!(other instanceof Toenail)) {
             return false;
         }
         Toenail rhs = ((Toenail) other);

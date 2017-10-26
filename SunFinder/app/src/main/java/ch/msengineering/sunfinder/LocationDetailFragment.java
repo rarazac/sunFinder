@@ -122,6 +122,7 @@ public class LocationDetailFragment extends Fragment {
 
         if (mItem != null) {
             ((TextView) rootView.findViewById(R.id.name)).setText(mItem.webCam.getTitle());
+            ((TextView) rootView.findViewById(R.id.courtesy)).setText("Webcams provided by webcams.travel");
             ((TextView) rootView.findViewById(R.id.country_name)).setText(mItem.webCam.getLocation().getCountry());
             ((TextView) rootView.findViewById(R.id.latitude)).setText(String.format("%s", mItem.webCam.getLocation().getLatitude()));
             ((TextView) rootView.findViewById(R.id.longitude)).setText(String.format("%s", mItem.webCam.getLocation().getLongitude()));

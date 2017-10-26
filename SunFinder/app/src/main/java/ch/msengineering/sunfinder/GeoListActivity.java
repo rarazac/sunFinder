@@ -6,7 +6,6 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
-import android.support.v4.view.MenuItemCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.RecyclerView;
@@ -27,6 +26,7 @@ import ch.msengineering.sunfinder.services.geolocation.GeoLocationServiceImpl;
 import ch.msengineering.sunfinder.services.geolocation.api.GeoLocation;
 
 import static android.support.design.widget.BaseTransientBottomBar.LENGTH_LONG;
+import static ch.msengineering.sunfinder.Constants.LOG_TAG;
 
 /**
  * An activity representing a list of Locations. This activity
@@ -67,7 +67,7 @@ public class GeoListActivity extends AppCompatActivity implements SearchView.OnQ
         geoLocationService = new GeoLocationServiceImpl(this, new LocalServiceConsumer() {
             @Override
             public void onGeoLocation(GeoLocation geoLocation) {
-                Log.i("SunFinder", "GeoLocationService: onGeoLocation -> Response: " + geoLocation);
+                Log.i(LOG_TAG, "GeoLocationService: onGeoLocation -> Response: " + geoLocation);
 
                 GeoContent.addItem(GeoContent.createItem(geoLocation));
 
@@ -77,7 +77,7 @@ public class GeoListActivity extends AppCompatActivity implements SearchView.OnQ
             @Override
             public void onGeoLocation(List<GeoLocation> geoLocations) {
                 for(GeoLocation geoLocation : geoLocations) {
-                    Log.i("SunFinder", "GeoLocationService: onGeoLocation -> Response: " + geoLocation);
+                    Log.i(LOG_TAG, "GeoLocationService: onGeoLocation -> Response: " + geoLocation);
 
                     GeoContent.addItem(GeoContent.createItem(geoLocation));
 
@@ -88,7 +88,7 @@ public class GeoListActivity extends AppCompatActivity implements SearchView.OnQ
 
             @Override
             public void onFailure(String message, Throwable t) {
-                Log.e("SunFinder", "GeoLocationService: onFailure -> Failure: " + message, t);
+                Log.e(LOG_TAG, "GeoLocationService: onFailure -> Failure: " + message, t);
                 showSnackbar("GeoLocationService: onFailure -> Failure: " + message);
             }
         });
@@ -113,7 +113,7 @@ public class GeoListActivity extends AppCompatActivity implements SearchView.OnQ
             geoLocationService.getGeoLocationByName(query);
             return true;
         } catch (Exception e) {
-            Log.e("SunFinder", "GeoLocationService: getGeoLocationByName -> Failure", e);
+            Log.e(LOG_TAG, "GeoLocationService: getGeoLocationByName -> Failure", e);
             showSnackbar("GeoLocationService: getGeoLocationByName -> Failure: " + e.getMessage());
             return false;
         }
@@ -133,7 +133,7 @@ public class GeoListActivity extends AppCompatActivity implements SearchView.OnQ
         try {
             geoLocationService.getCurrentLocation();
         } catch (Exception e) {
-            Log.e("SunFinder", "GeoLocationService: getCurrentLocation -> Failure", e);
+            Log.e(LOG_TAG, "GeoLocationService: getCurrentLocation -> Failure", e);
             showSnackbar("GeoLocationService: getCurrentLocation -> Failure: " + e.getMessage());
         }
     }
@@ -150,23 +150,23 @@ public class GeoListActivity extends AppCompatActivity implements SearchView.OnQ
     }
 
     public class SimpleItemRecyclerViewAdapter
-            extends RecyclerView.Adapter<SimpleItemRecyclerViewAdapter.ViewHolder> {
+            extends RecyclerView.Adapter<SimpleItemRecyclerViewAdapter.GeoListViewHolder> {
 
         private final List<GeoContent.GeoItem> mValues;
 
-        public SimpleItemRecyclerViewAdapter(List<GeoContent.GeoItem> items) {
+        private SimpleItemRecyclerViewAdapter(List<GeoContent.GeoItem> items) {
             mValues = items;
         }
 
         @Override
-        public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+        public GeoListViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
             View view = LayoutInflater.from(parent.getContext())
                     .inflate(R.layout.geo_list_content, parent, false);
-            return new ViewHolder(view);
+            return new GeoListViewHolder(view);
         }
 
         @Override
-        public void onBindViewHolder(final ViewHolder holder, int position) {
+        public void onBindViewHolder(final GeoListViewHolder holder, int position) {
             holder.mItem = mValues.get(position);
             holder.mNameView.setText(mValues.get(position).geoLocation.getName());
             holder.mCountryNameView.setText(mValues.get(position).geoLocation.getCountryName());
@@ -191,15 +191,16 @@ public class GeoListActivity extends AppCompatActivity implements SearchView.OnQ
             return mValues.size();
         }
 
-        public class ViewHolder extends RecyclerView.ViewHolder {
-            public final View mView;
-            public final TextView mNameView;
-            public final TextView mCountryNameView;
-            public final TextView mLatitudeView;
-            public final TextView mLongitudeView;
-            public GeoContent.GeoItem mItem;
+        public class GeoListViewHolder extends RecyclerView.ViewHolder {
+            private final View mView;
+            private final TextView mNameView;
+            private final TextView mCountryNameView;
+            private final TextView mLatitudeView;
+            private final TextView mLongitudeView;
 
-            public ViewHolder(View view) {
+            private GeoContent.GeoItem mItem;
+
+            private GeoListViewHolder(View view) {
                 super(view);
                 mView = view;
                 mNameView = view.findViewById(R.id.name);

@@ -29,6 +29,7 @@ import java.util.Calendar;
 import java.util.Locale;
 
 import static android.support.design.widget.BaseTransientBottomBar.LENGTH_LONG;
+import static ch.msengineering.sunfinder.Constants.LOG_TAG;
 
 /**
  * A fragment representing a single Location detail screen.
@@ -55,8 +56,6 @@ public class LocationDetailFragment extends Fragment {
     private RatingService ratingService;
     private RatingBar ratingBar;
     private Activity activity;
-    public LocationDetailFragment() {
-    }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -106,7 +105,7 @@ public class LocationDetailFragment extends Fragment {
 
             @Override
             public void onFailure(DatabaseError databaseError) {
-                Log.e("SunFinder", "RatingService: onFailure -> Failure: ",databaseError.toException());
+                Log.e(LOG_TAG, "RatingService: onFailure -> Failure: ",databaseError.toException());
             }
         });
         // request a rating
@@ -121,14 +120,14 @@ public class LocationDetailFragment extends Fragment {
         View rootView = inflater.inflate(R.layout.location_detail, container, false);
 
         if (mItem != null) {
-            ((TextView) rootView.findViewById(R.id.name)).setText(mItem.webCam.getTitle());
-            ((TextView) rootView.findViewById(R.id.country_name)).setText(mItem.webCam.getLocation().getCountry());
-            ((TextView) rootView.findViewById(R.id.latitude)).setText(String.format("%s", mItem.webCam.getLocation().getLatitude()));
-            ((TextView) rootView.findViewById(R.id.longitude)).setText(String.format("%s", mItem.webCam.getLocation().getLongitude()));
-            ((TextView) rootView.findViewById(R.id.lastupdate)).setText(getDate(mItem.webCam.getImage().getUpdate()));
+            rootView.<TextView>findViewById(R.id.name).setText(mItem.webCam.getTitle());
+            rootView.<TextView>findViewById(R.id.country_name).setText(mItem.webCam.getLocation().getCountry());
+            rootView.<TextView>findViewById(R.id.latitude).setText(String.format("%s", mItem.webCam.getLocation().getLatitude()));
+            rootView.<TextView>findViewById(R.id.longitude).setText(String.format("%s", mItem.webCam.getLocation().getLongitude()));
+            rootView.<TextView>findViewById(R.id.lastupdate).setText(getDate(mItem.webCam.getImage().getUpdate()));
 
             // rating is only pushed when this button is pressed
-            FloatingActionButton fab2 = (FloatingActionButton) rootView.findViewById(R.id.push_rating);
+            FloatingActionButton fab2 = rootView.findViewById(R.id.push_rating);
             fab2.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
@@ -153,8 +152,7 @@ public class LocationDetailFragment extends Fragment {
     private String getDate(long time) {
         Calendar cal = Calendar.getInstance(Locale.GERMAN);
         cal.setTimeInMillis(time * 1000);
-        String date = DateFormat.format("dd.MM.yyyy HH:mm:ss", cal).toString();
-        return date;
+        return DateFormat.format("dd.MM.yyyy HH:mm:ss", cal).toString();
     }
 
     // uses ratingService to set the rating of webcam with id: id
@@ -162,7 +160,7 @@ public class LocationDetailFragment extends Fragment {
         try {
             ratingService.setRating(id, ratingValue);
         } catch (Exception e) {
-            Log.e("SunFinder", "ratingService: setRating -> Failure", e);
+            Log.e(LOG_TAG, "ratingService: setRating -> Failure", e);
         }
     }
 
@@ -171,7 +169,7 @@ public class LocationDetailFragment extends Fragment {
         try {
             ratingService.getRating(id);
         } catch (Exception e) {
-            Log.e("SunFinder", "ratingService: getRating -> Failure", e);
+            Log.e(LOG_TAG, "ratingService: getRating -> Failure", e);
         }
     }
     // helper for Snackbar

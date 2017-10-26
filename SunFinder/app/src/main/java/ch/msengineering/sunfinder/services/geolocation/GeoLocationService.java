@@ -9,6 +9,7 @@ import java.io.IOException;
 public interface GeoLocationService {
 
     void getCurrentLocation() throws IOException;
+
     void getGeoLocationByName(String locationName) throws IOException;
 
 }

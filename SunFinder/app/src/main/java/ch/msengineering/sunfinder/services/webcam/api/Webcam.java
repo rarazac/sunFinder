@@ -56,7 +56,7 @@ public class Webcam implements Serializable {
     }
 
     public String getId() {
-        return id  != null ? id : "";
+        return id != null ? id : "";
     }
 
     public void setId(String id) {
@@ -141,8 +141,9 @@ public class Webcam implements Serializable {
         Webcam rhs = ((Webcam) other);
         return new EqualsBuilder().append(id, rhs.id).append(title, rhs.title).append(location, rhs.location).append(status, rhs.status).append(image, rhs.image).isEquals();
     }
+
     public int getRating() {
-        return rating  != 0 ? rating : 0;
+        return rating != 0 ? rating : 0;
     }
 
     public void setRating(int rating) {

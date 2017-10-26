@@ -11,7 +11,7 @@ import java.io.Serializable;
 
 public class Icon implements Serializable {
 
-    private final static long serialVersionUID = 8016838607788586401L;
+    private static final long serialVersionUID = 8016838607788586401L;
     @SerializedName("width")
     @Expose
     private long width;
@@ -76,7 +76,7 @@ public class Icon implements Serializable {
         if (other == this) {
             return true;
         }
-        if ((other instanceof Icon) == false) {
+        if (!(other instanceof Icon)) {
             return false;
         }
         Icon rhs = ((Icon) other);

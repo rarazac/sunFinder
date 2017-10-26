@@ -11,7 +11,7 @@ import java.io.Serializable;
 
 public class Current implements Serializable {
 
-    private final static long serialVersionUID = -5267271700475383120L;
+    private static final long serialVersionUID = -5267271700475383120L;
     @SerializedName("icon")
     @Expose
     private String icon;
@@ -112,7 +112,7 @@ public class Current implements Serializable {
         if (other == this) {
             return true;
         }
-        if ((other instanceof Current) == false) {
+        if (!(other instanceof Current)) {
             return false;
         }
         Current rhs = ((Current) other);

@@ -11,7 +11,7 @@ import java.io.Serializable;
 
 public class Daylight implements Serializable {
 
-    private final static long serialVersionUID = -5979141066603028297L;
+    private static final long serialVersionUID = -5979141066603028297L;
     @SerializedName("icon")
     @Expose
     private String icon;
@@ -112,7 +112,7 @@ public class Daylight implements Serializable {
         if (other == this) {
             return true;
         }
-        if ((other instanceof Daylight) == false) {
+        if (!(other instanceof Daylight)) {
             return false;
         }
         Daylight rhs = ((Daylight) other);

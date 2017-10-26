@@ -21,12 +21,13 @@ import ch.msengineering.sunfinder.services.LocalServiceConsumer;
 import ch.msengineering.sunfinder.services.geolocation.api.GeoLocation;
 
 import static android.content.Context.LOCATION_SERVICE;
+import static ch.msengineering.sunfinder.Constants.LOG_TAG;
 
 /**
  * Created by raphe on 10/10/2017.
  */
 
-public class GeoLocationServiceImpl implements GeoLocationService  {
+public class GeoLocationServiceImpl implements GeoLocationService {
 
     private final Activity activity;
     private final LocalServiceConsumer localServiceConsumer;
@@ -55,20 +56,23 @@ public class GeoLocationServiceImpl implements GeoLocationService  {
                             try {
                                 getGeoLocationByLongLat(bestProvider, location.getLatitude(), location.getLongitude());
                             } catch (IOException e) {
-                                Log.e("SunFinder", "GeoLocationService: onLocationChanged -> Failure", e);
+                                Log.e(LOG_TAG, "GeoLocationService: onLocationChanged -> Failure", e);
                             }
                         }
 
                         @Override
                         public void onStatusChanged(String s, int i, Bundle bundle) {
+                            //Not used
                         }
 
                         @Override
                         public void onProviderEnabled(String s) {
+                            //Not used
                         }
 
                         @Override
                         public void onProviderDisabled(String s) {
+                            //Not used
                         }
                     });
         }
@@ -77,19 +81,19 @@ public class GeoLocationServiceImpl implements GeoLocationService  {
         if (lastKnownLocation != null) {
             getGeoLocationByLongLat(bestProvider, lastKnownLocation.getLatitude(), lastKnownLocation.getLongitude());
         } else {
-            Log.w("SunFinder", "GeoLocationService: getCurrentLocation -> Warning: No last known location!");
+            Log.w(LOG_TAG, "GeoLocationService: getCurrentLocation -> Warning: No last known location!");
             localServiceConsumer.onGeoLocation(createDummyGeoLocation());
         }
     }
 
     public void getGeoLocationByName(String locationName) throws IOException {
-        if(Geocoder.isPresent()){
+        if (Geocoder.isPresent()) {
             Geocoder gc = new Geocoder(activity);
-            List<Address> addresses= gc.getFromLocationName(locationName, 10);
+            List<Address> addresses = gc.getFromLocationName(locationName, 10);
 
             List<GeoLocation> geoLocations = new ArrayList<>(addresses.size());
-            for(Address a : addresses){
-                if(a.hasLatitude() && a.hasLongitude()){
+            for (Address a : addresses) {
+                if (a.hasLatitude() && a.hasLongitude()) {
                     geoLocations.add(
                             new GeoLocation(
                                     a.getFeatureName(),
@@ -101,19 +105,19 @@ public class GeoLocationServiceImpl implements GeoLocationService  {
             }
             localServiceConsumer.onGeoLocation(geoLocations);
         } else {
-            Log.w("SunFinder", "GeoLocationService: getGeoLocationByName -> Warning: Device does not have a Geocoder!");
+            Log.w(LOG_TAG, "GeoLocationService: getGeoLocationByName -> Warning: Device does not have a Geocoder!");
             localServiceConsumer.onGeoLocation(createDummyGeoLocation());
         }
     }
 
     private void getGeoLocationByLongLat(String fallbackName, double latitude, double longitude) throws IOException {
-        if(Geocoder.isPresent()){
+        if (Geocoder.isPresent()) {
             Geocoder gc = new Geocoder(activity);
-            List<Address> addresses= gc.getFromLocation(latitude, longitude, 10);
+            List<Address> addresses = gc.getFromLocation(latitude, longitude, 10);
 
             List<GeoLocation> geoLocations = new ArrayList<>(addresses.size());
-            for(Address a : addresses){
-                if(a.hasLatitude() && a.hasLongitude()){
+            for (Address a : addresses) {
+                if (a.hasLatitude() && a.hasLongitude()) {
                     geoLocations.add(
                             new GeoLocation(
                                     a.getFeatureName(),
@@ -125,7 +129,7 @@ public class GeoLocationServiceImpl implements GeoLocationService  {
             }
             localServiceConsumer.onGeoLocation(geoLocations);
         } else {
-            Log.w("SunFinder", "GeoLocationService: getGeoLocationByName -> Warning: Device does not have a Geocoder!");
+            Log.w(LOG_TAG, "GeoLocationService: getGeoLocationByName -> Warning: Device does not have a Geocoder!");
             localServiceConsumer.onGeoLocation(createUnknownGeoLocation(fallbackName, latitude, longitude));
         }
     }

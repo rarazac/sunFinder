@@ -9,15 +9,15 @@
         android:id="@+id/image"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginEnd="@dimen/text_margin"
         android:background="@color/white"
-        android:scaleType="centerCrop"
-        android:layout_marginEnd="@dimen/text_margin" />
+        android:scaleType="centerCrop" />
 
     <LinearLayout
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:orientation="vertical"
-        android:layout_weight="1">
+        android:layout_weight="1"
+        android:orientation="vertical">
 
         <TextView
             android:id="@+id/name"
@@ -46,12 +46,12 @@
 
         <RatingBar
             android:id="@id/ratingBar"
+            style="?android:attr/ratingBarStyleSmall"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            style="?android:attr/ratingBarStyleSmall"
+            android:isIndicator="true"
             android:numStars="5"
-            android:stepSize="0.1"
-            android:isIndicator="true" />
+            android:stepSize="0.1" />
 
     </LinearLayout>
 
@@ -59,7 +59,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center_vertical"
-        android:src="@drawable/ic_keyboard_arrow_right_black_48dp"
-        android:alpha="0.2" />
+        android:alpha="0.2"
+        android:src="@drawable/ic_keyboard_arrow_right_black_48dp" />
 
 </LinearLayout>

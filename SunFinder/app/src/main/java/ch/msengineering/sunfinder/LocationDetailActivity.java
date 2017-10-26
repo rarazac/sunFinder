@@ -28,14 +28,14 @@ public class LocationDetailActivity extends AppCompatActivity {
         Toolbar toolbar = (Toolbar) findViewById(R.id.detail_toolbar);
         setSupportActionBar(toolbar);
 
-        final LocationContent.LocationItem mItem = LocationContent.ITEM_MAP.get(getIntent().getStringExtra(LocationDetailFragment.ARG_ITEM_ID));
+        final LocationContent.LocationItem mItem = LocationContent.getItemMap().get(getIntent().getStringExtra(LocationDetailFragment.ARG_ITEM_ID));
 
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 Uri gmmIntentUri = Uri.parse("geo:" + mItem.webCam.getLocation().getLatitude() + "," + mItem.webCam.getLocation().getLongitude() +
-                                "?q=" + mItem.webCam.getLocation().getLatitude() + "," + mItem.webCam.getLocation().getLongitude() + "(" + mItem.webCam.getTitle() + ")");
+                        "?q=" + mItem.webCam.getLocation().getLatitude() + "," + mItem.webCam.getLocation().getLongitude() + "(" + mItem.webCam.getTitle() + ")");
                 Intent mapIntent = new Intent(Intent.ACTION_VIEW, gmmIntentUri);
                 mapIntent.setPackage("com.google.android.apps.maps");
                 if (mapIntent.resolveActivity(getPackageManager()) != null) {

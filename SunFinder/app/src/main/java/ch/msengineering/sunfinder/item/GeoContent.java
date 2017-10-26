@@ -19,17 +19,27 @@ import ch.msengineering.sunfinder.services.geolocation.api.GeoLocation;
 public class GeoContent {
 
     private static final List<GeoItem> ORIGINAL_ITEMS = new ArrayList<>();
-    private static String currentQuery = null;
-
     /**
      * An array of items.
      */
-    public static final List<GeoItem> ITEMS = new ArrayList<>();
-
+    private static final List<GeoItem> ITEMS = new ArrayList<>();
     /**
      * A map of items, by ID.
      */
-    public static final Map<String, GeoItem> ITEM_MAP = new HashMap<>();
+    private static final Map<String, GeoItem> ITEM_MAP = new HashMap<>();
+    private static String currentQuery = null;
+
+    private GeoContent() {
+        //To hide the public constructor
+    }
+
+    public static List<GeoItem> getItems() {
+        return ITEMS;
+    }
+
+    public static Map<String, GeoItem> getItemMap() {
+        return ITEM_MAP;
+    }
 
     public static void addItem(GeoItem item) {
         if (!ITEM_MAP.containsKey(item.id)) {
@@ -46,7 +56,7 @@ public class GeoContent {
     public static void filter(String query) {
         currentQuery = query != null ? query.toLowerCase() : "";
 
-        for(GeoItem item : ORIGINAL_ITEMS) {
+        for (GeoItem item : ORIGINAL_ITEMS) {
             ITEMS.remove(item);
 
             GeoItem filterItem = filterItem(item);
@@ -86,20 +96,20 @@ public class GeoContent {
         public final String id;
         public final GeoLocation geoLocation;
 
-        public GeoItem(GeoLocation geoLocation) {
+        GeoItem(GeoLocation geoLocation) {
             this.id = geoLocation.getName() + ":" + geoLocation.getLatitude() + ":" + geoLocation.getLongitude();
             this.geoLocation = geoLocation;
         }
 
-        public boolean filter(String query) {
+        boolean filter(String query) {
             return id.toLowerCase().contains(query) ||
-                (geoLocation != null && (
-                    geoLocation.getName().toLowerCase().contains(query) ||
-                    geoLocation.getCountryCode().toLowerCase().contains(query) ||
-                    geoLocation.getCountryName().toLowerCase().contains(query) ||
-                    ("" + geoLocation.getLongitude()).toLowerCase().contains(query) ||
-                    ("" + geoLocation.getLatitude()).toLowerCase().contains(query)
-                ));
+                    (geoLocation != null && (
+                            geoLocation.getName().toLowerCase().contains(query) ||
+                                    geoLocation.getCountryCode().toLowerCase().contains(query) ||
+                                    geoLocation.getCountryName().toLowerCase().contains(query) ||
+                                    (Double.toString(geoLocation.getLongitude())).toLowerCase().contains(query) ||
+                                    (Double.toString(geoLocation.getLatitude())).toLowerCase().contains(query)
+                    ));
         }
 
         @Override
@@ -110,6 +120,28 @@ public class GeoContent {
         @Override
         public int compareTo(@NonNull GeoItem other) {
             return geoLocation.getName().compareTo(other.geoLocation.getName());
+        }
+
+        @Override
+        public boolean equals(Object o) {
+            if (this == o) return true;
+
+            if (o == null || getClass() != o.getClass()) return false;
+
+            GeoItem geoItem = (GeoItem) o;
+
+            return new EqualsBuilder()
+                    .append(id, geoItem.id)
+                    .append(geoLocation.getName(), geoItem.geoLocation.getName())
+                    .isEquals();
+        }
+
+        @Override
+        public int hashCode() {
+            return new HashCodeBuilder(17, 37)
+                    .append(id)
+                    .append(geoLocation.getName())
+                    .toHashCode();
         }
     }
 }

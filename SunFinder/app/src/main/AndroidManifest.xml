@@ -22,7 +22,8 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".LocationListActivity"
+        <activity
+            android:name=".LocationListActivity"
             android:label="@string/location_list_title"
             android:theme="@style/AppTheme.NoActionBar">
             <meta-data

@@ -15,18 +15,17 @@ import android.widget.ImageView;
 import android.widget.RatingBar;
 import android.widget.TextView;
 
-import ch.msengineering.sunfinder.item.LocationContent;
-import ch.msengineering.sunfinder.services.RatingServiceConsumer;
-import ch.msengineering.sunfinder.services.rating.RatingService;
-import ch.msengineering.sunfinder.services.rating.RatingServiceImplementation;
-import ch.msengineering.sunfinder.services.rating.api.Rating;
-
-
 import com.google.firebase.database.DatabaseError;
 import com.squareup.picasso.Picasso;
 
 import java.util.Calendar;
 import java.util.Locale;
+
+import ch.msengineering.sunfinder.item.LocationContent;
+import ch.msengineering.sunfinder.services.RatingServiceConsumer;
+import ch.msengineering.sunfinder.services.rating.RatingService;
+import ch.msengineering.sunfinder.services.rating.RatingServiceImplementation;
+import ch.msengineering.sunfinder.services.rating.api.Rating;
 
 import static android.support.design.widget.BaseTransientBottomBar.LENGTH_LONG;
 import static ch.msengineering.sunfinder.Constants.LOG_TAG;
@@ -63,7 +62,7 @@ public class LocationDetailFragment extends Fragment {
         this.activity = this.getActivity();
 
         if (getArguments().containsKey(ARG_ITEM_ID)) {
-            mItem = LocationContent.ITEM_MAP.get(getArguments().getString(ARG_ITEM_ID));
+            mItem = LocationContent.getItemMap().get(getArguments().getString(ARG_ITEM_ID));
             // request a rating from db
 
             CollapsingToolbarLayout appBarLayout = activity.findViewById(R.id.toolbar_layout);
@@ -90,7 +89,7 @@ public class LocationDetailFragment extends Fragment {
             @Override
             public void onRatingGet(Rating rating) {
                 // we have to update the rating bar according to the rating from the database
-                Log.v("sunFinder", "LocationDetailActivity.onRatingGet(); "
+                Log.v(LOG_TAG, "LocationDetailActivity.onRatingGet(); "
                         + "id = " + rating.getId() + "  "
                         + "ratingValue = " + rating.getRatingValue() + "  "
                         + "timeStamp = " + rating.getTimeStamp());
@@ -99,13 +98,13 @@ public class LocationDetailFragment extends Fragment {
                 int ts = tsLong.intValue();
                 if ((ts - rating.getTimeStamp()) < 3600) {
                     // timeStamp is not older than 1h ( 1h = 60min*60sec = 3600s
-                     ratingBar.setRating(rating.getRatingValue());
+                    ratingBar.setRating(rating.getRatingValue());
                 }
             }
 
             @Override
             public void onFailure(DatabaseError databaseError) {
-                Log.e(LOG_TAG, "RatingService: onFailure -> Failure: ",databaseError.toException());
+                Log.e(LOG_TAG, "RatingService: onFailure -> Failure: ", databaseError.toException());
             }
         });
         // request a rating
@@ -172,6 +171,7 @@ public class LocationDetailFragment extends Fragment {
             Log.e(LOG_TAG, "ratingService: getRating -> Failure", e);
         }
     }
+
     // helper for Snackbar
     private void showSnackbar(final String message) {
         Snackbar.make(activity.findViewById(R.id.location_detail), message, LENGTH_LONG).show();

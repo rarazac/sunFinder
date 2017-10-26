@@ -9,38 +9,40 @@ public class Rating {
     private String id; // contains the id of the webcam which was rated
     private int ratingValue; // contains the value of the rating, high rating = good
     private int timeStamp;
-    public Rating(){
+
+    public Rating() {
         // Default constructor required for calls to DataSnapshot.getValue(Rating.class)
     }
-    public Rating(String id, int ratingValue, int timeStamp){
+
+    public Rating(String id, int ratingValue, int timeStamp) {
         this.id = id;
         this.ratingValue = ratingValue;
         this.timeStamp = timeStamp;
     }
 
     // return value if value is not 0 otherwise return 0
-    public int getRatingValue(){
+    public int getRatingValue() {
         return ratingValue != 0 ? ratingValue : 0;
     }
 
-    public int getTimeStamp(){
+    public void setRatingValue(int ratingValue) {
+        this.ratingValue = ratingValue;
+    }
+
+    public int getTimeStamp() {
         return timeStamp != 0 ? timeStamp : 0;
     }
 
-    // return id if id is not null otherwise return ""
-    public String getId(){
-        return id != null ? id : "";
-    }
-
-    public void setId(String id){
-        this.id = id;
-    }
-
-    public void setTimeStamp(int timeStamp){
+    public void setTimeStamp(int timeStamp) {
         this.timeStamp = timeStamp;
     }
 
-    public void setRatingValue(int ratingValue){
-        this.ratingValue = ratingValue;
+    // return id if id is not null otherwise return ""
+    public String getId() {
+        return id != null ? id : "";
+    }
+
+    public void setId(String id) {
+        this.id = id;
     }
 }

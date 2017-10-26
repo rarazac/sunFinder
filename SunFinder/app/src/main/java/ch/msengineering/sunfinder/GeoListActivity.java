@@ -74,9 +74,10 @@ public class GeoListActivity extends AppCompatActivity implements SearchView.OnQ
                 RecyclerView recyclerView = (RecyclerView) findViewById(R.id.geo_list);
                 recyclerView.getAdapter().notifyDataSetChanged();
             }
+
             @Override
             public void onGeoLocation(List<GeoLocation> geoLocations) {
-                for(GeoLocation geoLocation : geoLocations) {
+                for (GeoLocation geoLocation : geoLocations) {
                     Log.i(LOG_TAG, "GeoLocationService: onGeoLocation -> Response: " + geoLocation);
 
                     GeoContent.addItem(GeoContent.createItem(geoLocation));
@@ -143,7 +144,7 @@ public class GeoListActivity extends AppCompatActivity implements SearchView.OnQ
     }
 
     private void setupRecyclerView(@NonNull RecyclerView recyclerView) {
-        recyclerView.setAdapter(new SimpleItemRecyclerViewAdapter(GeoContent.ITEMS));
+        recyclerView.setAdapter(new SimpleItemRecyclerViewAdapter(GeoContent.getItems()));
 
         DividerItemDecoration dividerItemDecoration = new DividerItemDecoration(recyclerView.getContext(), DividerItemDecoration.VERTICAL);
         recyclerView.addItemDecoration(dividerItemDecoration);

@@ -11,7 +11,7 @@ import java.io.Serializable;
 
 public class Image implements Serializable {
 
-    private final static long serialVersionUID = -4775850294462157118L;
+    private static final long serialVersionUID = -4775850294462157118L;
     @SerializedName("current")
     @Expose
     private Current current;
@@ -112,7 +112,7 @@ public class Image implements Serializable {
         if (other == this) {
             return true;
         }
-        if ((other instanceof Image) == false) {
+        if (!(other instanceof Image)) {
             return false;
         }
         Image rhs = ((Image) other);

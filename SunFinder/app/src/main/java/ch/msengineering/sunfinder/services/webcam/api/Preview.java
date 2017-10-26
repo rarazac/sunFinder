@@ -11,7 +11,7 @@ import java.io.Serializable;
 
 public class Preview implements Serializable {
 
-    private final static long serialVersionUID = 9021901378350547903L;
+    private static final long serialVersionUID = 9021901378350547903L;
     @SerializedName("width")
     @Expose
     private long width;
@@ -76,7 +76,7 @@ public class Preview implements Serializable {
         if (other == this) {
             return true;
         }
-        if ((other instanceof Preview) == false) {
+        if (!(other instanceof Preview)) {
             return false;
         }
         Preview rhs = ((Preview) other);

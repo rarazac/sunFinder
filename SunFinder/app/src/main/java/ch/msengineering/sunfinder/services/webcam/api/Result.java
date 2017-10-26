@@ -13,7 +13,7 @@ import java.util.List;
 
 public class Result implements Serializable {
 
-    private final static long serialVersionUID = 4476641959610140120L;
+    private static final long serialVersionUID = 4476641959610140120L;
     @SerializedName("offset")
     @Expose
     private long offset;
@@ -25,7 +25,7 @@ public class Result implements Serializable {
     private long total;
     @SerializedName("webcams")
     @Expose
-    private List<Webcam> webcams = new ArrayList<Webcam>();
+    private List<Webcam> webcams = new ArrayList<>();
 
     /**
      * No args constructor for use in serialization
@@ -114,7 +114,7 @@ public class Result implements Serializable {
         if (other == this) {
             return true;
         }
-        if ((other instanceof Result) == false) {
+        if (!(other instanceof Result)) {
             return false;
         }
         Result rhs = ((Result) other);

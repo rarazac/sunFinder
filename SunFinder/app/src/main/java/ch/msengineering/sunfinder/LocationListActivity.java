@@ -23,7 +23,9 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.DatabaseError;
 import com.squareup.picasso.Picasso;
+
 import java.util.List;
 
 import ch.msengineering.sunfinder.item.GeoContent;
@@ -40,7 +42,7 @@ import ch.msengineering.sunfinder.services.webcam.api.WebCamNearby;
 import ch.msengineering.sunfinder.services.webcam.api.Webcam;
 import retrofit2.Call;
 import retrofit2.Response;
-import com.google.firebase.database.DatabaseError;
+
 import static android.support.design.widget.BaseTransientBottomBar.LENGTH_LONG;
 import static ch.msengineering.sunfinder.Constants.LOG_TAG;
 
@@ -54,15 +56,13 @@ import static ch.msengineering.sunfinder.Constants.LOG_TAG;
  */
 public class LocationListActivity extends AppCompatActivity implements SearchView.OnQueryTextListener {
 
-    private static final int INITIAL_RADIUS_OF_SEARCH_KM = 20;
-    private static final int EXTENSION_FACTOR_RADIUS_OF_SEARCH_KM = 10;
-
     /**
      * The list argument representing the list ID that this list
      * represents.
      */
     public static final String ARG_LIST_ID = "list_id";
-
+    private static final int INITIAL_RADIUS_OF_SEARCH_KM = 20;
+    private static final int EXTENSION_FACTOR_RADIUS_OF_SEARCH_KM = 10;
     /**
      * Whether or not the activity is in two-pane mode, i.e. running on a tablet
      * device.
@@ -112,7 +112,7 @@ public class LocationListActivity extends AppCompatActivity implements SearchVie
 
             recyclerView.getAdapter().notifyDataSetChanged();
 
-            GeoContent.GeoItem geoItem = GeoContent.ITEM_MAP.get(getIntent().getExtras().getString(ARG_LIST_ID));
+            GeoContent.GeoItem geoItem = GeoContent.getItemMap().get(getIntent().getExtras().getString(ARG_LIST_ID));
 
             getWebCamNearby(geoItem.geoLocation, INITIAL_RADIUS_OF_SEARCH_KM);
         }
@@ -130,8 +130,8 @@ public class LocationListActivity extends AppCompatActivity implements SearchVie
             public void onRatingGet(Rating rating) {
                 int ts;
                 Long tsLong;
-                for(int i = 0; i < LocationContent.ITEMS.size(); i++) {
-                    if(LocationContent.ITEMS.get(i).webCam.getId().equals(rating.getId())) {
+                for (int i = 0; i < LocationContent.getItems().size(); i++) {
+                    if (LocationContent.getItems().get(i).webCam.getId().equals(rating.getId())) {
                         // check if timeStamp is not too old
                         tsLong = System.currentTimeMillis() / 1000;
                         ts = tsLong.intValue();
@@ -142,7 +142,7 @@ public class LocationListActivity extends AppCompatActivity implements SearchVie
                                     + "ratingValue = " + rating.getRatingValue() + "  "
                                     + "timeStamp = " + rating.getTimeStamp());
                             // we found the webcam which has the same id as one in the db, set the rating
-                            Webcam webcam = LocationContent.ITEMS.get(i).webCam;
+                            Webcam webcam = LocationContent.getItems().get(i).webCam;
                             webcam.setRating(rating.getRatingValue());
                             RecyclerView recyclerView = (RecyclerView) findViewById(R.id.location_list);
                             recyclerView.getAdapter().notifyItemChanged(i);
@@ -150,9 +150,10 @@ public class LocationListActivity extends AppCompatActivity implements SearchVie
                     }
                 }
             }
+
             @Override
             public void onFailure(DatabaseError databaseError) {
-                Log.e(LOG_TAG, "RatingService: onFailure -> Failure: ",databaseError.toException());
+                Log.e(LOG_TAG, "RatingService: onFailure -> Failure: ", databaseError.toException());
             }
         });
     }
@@ -173,7 +174,7 @@ public class LocationListActivity extends AppCompatActivity implements SearchVie
                     lastSearchedLocation = null;
                     lastRadiusKm = 0;
 
-                    for(Webcam webcam : response.body().getResult().getWebcams()) {
+                    for (Webcam webcam : response.body().getResult().getWebcams()) {
                         LocationContent.addItem(LocationContent.createItem(webcam.getId(), webcam));
                         // check if we have a rating for every webcam we find
                         getRating(webcam.getId());
@@ -202,27 +203,27 @@ public class LocationListActivity extends AppCompatActivity implements SearchVie
         super.onStart();
 
         mAuth.signInAnonymously()
-            .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
-                @Override
-                public void onComplete(@NonNull Task<AuthResult> task) {
-                    if (task.isSuccessful()) {
-                        // Sign in success, update UI with the signed-in user's information
-                        Log.d(LOG_TAG, "signInAnonymously:success");
-                    } else {
-                        // If sign in fails, display a message to the user.
-                        Log.w(LOG_TAG, "signInAnonymously:failure", task.getException());
-                        Toast.makeText(getApplicationContext(), "Authentication failed.",
-                                Toast.LENGTH_SHORT).show();
+                .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
+                    @Override
+                    public void onComplete(@NonNull Task<AuthResult> task) {
+                        if (task.isSuccessful()) {
+                            // Sign in success, update UI with the signed-in user's information
+                            Log.d(LOG_TAG, "signInAnonymously:success");
+                        } else {
+                            // If sign in fails, display a message to the user.
+                            Log.w(LOG_TAG, "signInAnonymously:failure", task.getException());
+                            Toast.makeText(getApplicationContext(), "Authentication failed.",
+                                    Toast.LENGTH_SHORT).show();
+                        }
                     }
-                }
-            });
+                });
     }
 
     @Override
-    public  void onResume(){
+    public void onResume() {
         super.onResume();
         // update webcams and ratings when coming back from detail view or search view
-        GeoContent.GeoItem geoItem = GeoContent.ITEM_MAP.get(getIntent().getExtras().getString(ARG_LIST_ID));
+        GeoContent.GeoItem geoItem = GeoContent.getItemMap().get(getIntent().getExtras().getString(ARG_LIST_ID));
 
         getWebCamNearby(geoItem.geoLocation, INITIAL_RADIUS_OF_SEARCH_KM);
 
@@ -239,11 +240,10 @@ public class LocationListActivity extends AppCompatActivity implements SearchVie
         }
     }
 
-    private void getRating(String id){
-        try{
+    private void getRating(String id) {
+        try {
             ratingService.getRating(id);
-        }
-        catch(Exception e) {
+        } catch (Exception e) {
             Log.e(LOG_TAG, "RatingService: getRating -> Failure", e);
             showSnackbar("RatingService: getRating -> Failure: " + e.getMessage());
         }
@@ -269,7 +269,7 @@ public class LocationListActivity extends AppCompatActivity implements SearchVie
     }
 
     private void setupRecyclerView(@NonNull RecyclerView recyclerView) {
-        recyclerView.setAdapter(new SimpleItemRecyclerViewAdapter(LocationContent.ITEMS));
+        recyclerView.setAdapter(new SimpleItemRecyclerViewAdapter(LocationContent.getItems()));
 
         DividerItemDecoration dividerItemDecoration = new DividerItemDecoration(recyclerView.getContext(), DividerItemDecoration.VERTICAL);
         recyclerView.addItemDecoration(dividerItemDecoration);
@@ -285,8 +285,8 @@ public class LocationListActivity extends AppCompatActivity implements SearchVie
             // does not work!
             mValues = items;
             mValues.clear();
-            for(int i = 0; i < items.size(); i++){
-                mValues.add(i,items.get(i));
+            for (int i = 0; i < items.size(); i++) {
+                mValues.add(i, items.get(i));
             }
         }
 

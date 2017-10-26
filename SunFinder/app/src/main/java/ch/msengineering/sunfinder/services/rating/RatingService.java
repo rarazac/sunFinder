@@ -5,7 +5,8 @@ package ch.msengineering.sunfinder.services.rating;
  */
 public interface RatingService {
 
-    void getRating(String id) throws  Exception;
-    void setRating(String id, int ratingValue) throws Exception;
+    void getRating(String id);
+
+    void setRating(String id, int ratingValue);
 
 }

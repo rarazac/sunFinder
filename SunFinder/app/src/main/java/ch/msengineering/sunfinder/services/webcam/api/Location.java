@@ -11,7 +11,7 @@ import java.io.Serializable;
 
 public class Location implements Serializable {
 
-    private final static long serialVersionUID = 1896523113426690664L;
+    private static final long serialVersionUID = 1896523113426690664L;
     @SerializedName("city")
     @Expose
     private String city;
@@ -220,7 +220,7 @@ public class Location implements Serializable {
         if (other == this) {
             return true;
         }
-        if ((other instanceof Location) == false) {
+        if (!(other instanceof Location)) {
             return false;
         }
         Location rhs = ((Location) other);

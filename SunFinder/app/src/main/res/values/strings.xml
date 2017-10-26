@@ -1,8 +1,12 @@
 <resources>
     <string name="app_name">SunFinder</string>
-    <string name="geo_list_title">SunFinder - Point of Interest</string>
-    <string name="location_list_title">SunFinder - Locations</string>
-    <string name="location_detail_title">SunFinder - Location</string>
+    <string name="geo_list_title">SunFinder - Chose a Location</string>
+    <string name="location_list_title">SunFinder - Chose a Webcam</string>
+    <string name="location_detail_title">SunFinder - Webcam</string>
     <string name="action_search">Submit to search, type to filter</string>
     <string name="action_filter">Type to filter</string>
+
+    <string name="title_activity_welcome">WelcomeActivity</string>
+    <string name="dummy_button">Dummy Button</string>
+    <string name="dummy_content">DUMMY\nCONTENT</string>
 </resources>

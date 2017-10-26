@@ -59,6 +59,9 @@ public class GeoListActivity extends AppCompatActivity implements SearchView.OnQ
                 getCurrentLocation();
             }
         });
+        // get the string from the welcome activity
+        Intent intent = getIntent();
+        String desiredLocationFromWelcome = intent.getStringExtra("desiredLocation");
 
         RecyclerView recyclerView = (RecyclerView) findViewById(R.id.geo_list);
         assert recyclerView != null;
@@ -96,11 +99,17 @@ public class GeoListActivity extends AppCompatActivity implements SearchView.OnQ
 
         if (getIntent() != null && getIntent().getExtras() != null &&
                 getIntent().getExtras().containsKey("home") && getIntent().getExtras().getBoolean("home")) {
-
             return;
         }
-
-        getCurrentLocation();
+        // get the location for the string which the user entered in the welcome screen
+        try {
+            geoLocationService.getGeoLocationByName(desiredLocationFromWelcome);
+        }
+        catch (Exception e)
+        {
+            Log.e(LOG_TAG, "GeoLocationService: getCurrentLocation -> Failure", e);
+            showSnackbar("GeoLocationService: getCurrentLocation -> Failure: " + e.getMessage());
+        }
     }
 
     @Override

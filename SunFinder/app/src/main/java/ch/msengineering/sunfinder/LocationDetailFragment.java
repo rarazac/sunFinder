@@ -124,6 +124,7 @@ public class LocationDetailFragment extends Fragment {
             rootView.<TextView>findViewById(R.id.latitude).setText(String.format("%s", mItem.webCam.getLocation().getLatitude()));
             rootView.<TextView>findViewById(R.id.longitude).setText(String.format("%s", mItem.webCam.getLocation().getLongitude()));
             rootView.<TextView>findViewById(R.id.lastupdate).setText(getDate(mItem.webCam.getImage().getUpdate()));
+            rootView.<TextView>findViewById(R.id.courtesy).setText("webcams provied by webcam.travel");
 
             // rating is only pushed when this button is pressed
             FloatingActionButton fab2 = rootView.findViewById(R.id.push_rating);

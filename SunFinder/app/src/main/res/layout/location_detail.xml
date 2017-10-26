@@ -6,6 +6,13 @@
     android:orientation="vertical"
     tools:context="ch.msengineering.sunfinder.LocationDetailFragment">
 
+
+    <TextView
+        android:id="@+id/courtesy"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?attr/textAppearanceListItem" />
+
     <TextView
         android:id="@+id/name"
         style="?android:attr/textAppearanceLarge"

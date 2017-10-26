@@ -1,10 +1,7 @@
 package ch.msengineering.sunfinder.services.rating;
-
 import ch.msengineering.sunfinder.services.RatingServiceConsumer;
 import ch.msengineering.sunfinder.services.rating.api.Rating;
-
 import android.util.Log;
-
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -49,7 +46,6 @@ public class RatingServiceImplementation implements RatingService {
                 ratingServiceConsumer.onRatingSet(databaseError);
             }
         });
-
         // set timeStamp
         Long tsLong = System.currentTimeMillis()/1000;
         int ts = tsLong.intValue();

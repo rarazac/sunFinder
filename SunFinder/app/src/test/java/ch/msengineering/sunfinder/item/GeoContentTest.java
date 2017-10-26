@@ -3,8 +3,6 @@ package ch.msengineering.sunfinder.item;
 import org.junit.Before;
 import org.junit.Test;
 
-import java.util.Collections;
-
 import ch.msengineering.sunfinder.services.geolocation.api.GeoLocation;
 
 import static org.junit.Assert.assertEquals;

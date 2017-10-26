@@ -3,7 +3,6 @@ package ch.msengineering.sunfinder.item;
 import org.junit.Before;
 import org.junit.Test;
 
-import ch.msengineering.sunfinder.services.geolocation.api.GeoLocation;
 import ch.msengineering.sunfinder.services.webcam.api.Image;
 import ch.msengineering.sunfinder.services.webcam.api.Location;
 import ch.msengineering.sunfinder.services.webcam.api.Webcam;

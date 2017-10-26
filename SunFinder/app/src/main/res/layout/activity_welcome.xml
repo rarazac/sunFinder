@@ -45,11 +45,11 @@
             android:id="@+id/textView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_alignParentTop="true"
+            android:layout_centerHorizontal="true"
             android:text="Where should I look for sun?"
             android:textAppearance="@android:style/TextAppearance.Material.Title"
-            android:textSize="30sp"
-            android:layout_alignParentTop="true"
-            android:layout_centerHorizontal="true">
+            android:textSize="30sp">
 
         </TextView>
 
@@ -61,14 +61,13 @@
             android:layout_alignParentStart="true"
             android:layout_below="@+id/textView"
             android:layout_marginTop="21dp"
+            android:backgroundTint="@color/black_overlay"
             android:hint="Enter a location"
             android:text="Zürich"
             android:textColorLink="@android:color/holo_orange_dark"
             android:textCursorDrawable="@drawable/orange_crusor"
             android:textSize="30sp"
-            android:backgroundTint="@color/black_overlay"
-            tools:textStyle="bold">
-        </EditText>
+            tools:textStyle="bold"></EditText>
 
         <android.support.design.widget.FloatingActionButton
             android:id="@+id/welcomeFAB"

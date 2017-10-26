@@ -1,17 +1,11 @@
 package ch.msengineering.sunfinder;
 
 import android.content.Intent;
+import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
-import android.view.KeyEvent;
 import android.view.View;
-import android.view.inputmethod.EditorInfo;
 import android.widget.EditText;
-import android.widget.TextView;
-import android.widget.Toast;
-
-import static android.R.attr.value;
 
 public class WelcomeActivity extends AppCompatActivity {
 

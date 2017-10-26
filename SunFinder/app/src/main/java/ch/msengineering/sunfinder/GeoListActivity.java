@@ -104,9 +104,7 @@ public class GeoListActivity extends AppCompatActivity implements SearchView.OnQ
         // get the location for the string which the user entered in the welcome screen
         try {
             geoLocationService.getGeoLocationByName(desiredLocationFromWelcome);
-        }
-        catch (Exception e)
-        {
+        } catch (Exception e) {
             Log.e(LOG_TAG, "GeoLocationService: getCurrentLocation -> Failure", e);
             showSnackbar("GeoLocationService: getCurrentLocation -> Failure: " + e.getMessage());
         }

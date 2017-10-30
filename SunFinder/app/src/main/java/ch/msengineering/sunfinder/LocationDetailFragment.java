@@ -55,16 +55,15 @@ public class LocationDetailFragment extends Fragment {
     private RatingService ratingService;
     private RatingBar ratingBar;
     private Activity activity;
+    private Rating currentRating;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         this.activity = this.getActivity();
-
+        this.currentRating = new Rating("0",0,0);
         if (getArguments().containsKey(ARG_ITEM_ID)) {
             mItem = LocationContent.getItemMap().get(getArguments().getString(ARG_ITEM_ID));
-            // request a rating from db
-
             CollapsingToolbarLayout appBarLayout = activity.findViewById(R.id.toolbar_layout);
             if (appBarLayout != null) {
                 appBarLayout.setTitle(mItem.webCam.getTitle());
@@ -89,27 +88,31 @@ public class LocationDetailFragment extends Fragment {
             @Override
             public void onRatingGet(Rating rating) {
                 // we have to update the rating bar according to the rating from the database
+                // only update if the timestamp in the db is not too old
+                // check if timeStamp is not too old
+                Long tsLong = System.currentTimeMillis() / 1000;
+                int ts = tsLong.intValue();
                 Log.v(LOG_TAG, "LocationDetailActivity.onRatingGet(); "
                         + "id = " + rating.getId() + "  "
                         + "ratingValue = " + rating.getRatingValue() + "  "
                         + "timeStamp = " + rating.getTimeStamp());
-                // check if timeStamp is not too old
-                Long tsLong = System.currentTimeMillis() / 1000;
-                int ts = tsLong.intValue();
                 if ((ts - rating.getTimeStamp()) < 3600) {
-                    // timeStamp is not older than 1h ( 1h = 60min*60sec = 3600s
+                    // timeStamp is not older than 1h ( 1h = 60min*60sec = 3600s )
                     ratingBar.setRating(rating.getRatingValue());
                 }
+                // set the current rating to this from the db. this prevents that closing
+                // and opening the app alows the user to rate multiple times
+                currentRating = rating;
             }
 
             @Override
-            public void onFailure(DatabaseError databaseError) {
-                Log.e(LOG_TAG, "RatingService: onFailure -> Failure: ", databaseError.toException());
+            public void onFailure(Exception e) {
+                showSnackbar("RatingService: onFailure -> Failure: " + e.toString());
+                Log.e(LOG_TAG, "RatingService: onFailure -> Failure: ", e);
             }
         });
         // request a rating
         getRating(mItem.id);
-
     }
 
     @Override
@@ -158,7 +161,20 @@ public class LocationDetailFragment extends Fragment {
     // uses ratingService to set the rating of webcam with id: id
     private void setRating(String id, int ratingValue) {
         try {
-            ratingService.setRating(id, ratingValue);
+            Long tsLong = System.currentTimeMillis() / 1000;
+            int ts = tsLong.intValue();
+
+            // only allow rating if the timestamp from the is older then 3600 seconds
+            if ((currentRating.getTimeStamp() + 3600 ) < ts) {
+                ratingService.setRating(id, ratingValue, ts);
+                // update local currentRating
+                currentRating.setTimeStamp(ts);
+                currentRating.setId(id);
+                currentRating.setRatingValue(ratingValue);
+            }
+            else{
+                showSnackbar("this webcam was already rated");
+            }
         } catch (Exception e) {
             Log.e(LOG_TAG, "ratingService: setRating -> Failure", e);
         }

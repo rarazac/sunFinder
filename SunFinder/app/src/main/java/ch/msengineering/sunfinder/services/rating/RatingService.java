@@ -7,6 +7,6 @@ public interface RatingService {
 
     void getRating(String id);
 
-    void setRating(String id, int ratingValue);
+    void setRating(String id, int ratingValue, int ts);
 
 }

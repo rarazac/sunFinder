@@ -152,8 +152,9 @@ public class LocationListActivity extends AppCompatActivity implements SearchVie
             }
 
             @Override
-            public void onFailure(DatabaseError databaseError) {
-                Log.e(LOG_TAG, "RatingService: onFailure -> Failure: ", databaseError.toException());
+            public void onFailure(Exception e) {
+                showSnackbar("this webcam was already rated, wait a bit");
+                Log.e(LOG_TAG, "RatingService: onFailure -> Failure: ", e);
             }
         });
     }

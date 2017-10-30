@@ -17,5 +17,5 @@ public interface RatingServiceConsumer {
     void onRatingGet(Rating rating);
 
     // called in RatingServiceImplementation when something went wrong
-    void onFailure(DatabaseError databaseError);
+    void onFailure(Exception e);
 }

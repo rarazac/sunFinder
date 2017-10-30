@@ -22,7 +22,6 @@ public class RatingServiceImplementation implements RatingService {
 
     private final RatingServiceConsumer ratingServiceConsumer;
     private DatabaseReference mDatabase;
-
     public RatingServiceImplementation(RatingServiceConsumer ratingServiceConsumer) {
         this.ratingServiceConsumer = ratingServiceConsumer;
     }
@@ -41,10 +40,10 @@ public class RatingServiceImplementation implements RatingService {
      *          - timeStamp: ts_UTC
      */
 
-    public void setRating(String id, int ratingValue) {
+    public void setRating(String id, int ratingValue, int ts) {
         mDatabase = FirebaseDatabase.getInstance().getReference();
 
-        // set ratingValue
+        // set ratingValue only if it was unchanged for the last 60 minutes
         mDatabase.child(DB_ROOT).child(id).child("ratingValue").setValue(ratingValue, new DatabaseReference.CompletionListener() {
             @Override
             public void onComplete(DatabaseError databaseError, DatabaseReference mDatabase) {
@@ -52,9 +51,6 @@ public class RatingServiceImplementation implements RatingService {
                 ratingServiceConsumer.onRatingSet(databaseError);
             }
         });
-        // set timeStamp
-        Long tsLong = System.currentTimeMillis() / 1000;
-        int ts = tsLong.intValue();
         mDatabase.child(DB_ROOT).child(id).child("timeStamp").setValue(ts, new DatabaseReference.CompletionListener() {
             @Override
             public void onComplete(DatabaseError databaseError, DatabaseReference mDatabase) {
@@ -86,6 +82,7 @@ public class RatingServiceImplementation implements RatingService {
                     if (idRemote.equals(id)) {
                         // callback to activity which called getRating()
                         ratingServiceConsumer.onRatingGet(rating);
+                        break;
                     }
                 }
             }
@@ -93,7 +90,7 @@ public class RatingServiceImplementation implements RatingService {
             @Override
             public void onCancelled(DatabaseError databaseError) {
                 Log.e(LOG_TAG, "onCancelled", databaseError.toException());
-                ratingServiceConsumer.onFailure(databaseError);
+                ratingServiceConsumer.onFailure(databaseError.toException());
             }
         });
     }

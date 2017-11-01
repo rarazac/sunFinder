@@ -12,6 +12,7 @@ public class Constants {
 
     public static final String ENDPOINT = "https://webcamstravel.p.mashape.com";
 
+    public  static final String ER_LOG_GEO_LOCATION = "GeoLocationService: getCurrentLocation -> Failure";
     private Constants() {
         //Hide default constructor
     }

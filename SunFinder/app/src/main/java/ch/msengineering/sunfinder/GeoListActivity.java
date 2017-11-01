@@ -27,6 +27,7 @@ import ch.msengineering.sunfinder.services.geolocation.api.GeoLocation;
 
 import static android.support.design.widget.BaseTransientBottomBar.LENGTH_LONG;
 import static ch.msengineering.sunfinder.Constants.LOG_TAG;
+import static ch.msengineering.sunfinder.Constants.ER_LOG_GEO_LOCATION;
 
 /**
  * An activity representing a list of Locations. This activity
@@ -52,17 +53,18 @@ public class GeoListActivity extends AppCompatActivity implements SearchView.OnQ
         SearchView searchView = (SearchView) findViewById(R.id.search_view);
         searchView.setOnQueryTextListener(this);
 
-        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                getCurrentLocation();
-            }
-        });
         // get the string from the welcome activity
         Intent intent = getIntent();
-        String desiredLocationFromWelcome = intent.getStringExtra("desiredLocation");
-
+        String desiredLocationFromWelcome;
+        // check if text field was empty, or if we should get the location from the location manager
+        if(intent != null && !intent.getStringExtra("desiredLocation").equalsIgnoreCase("getFromManager") && !intent.getStringExtra("desiredLocation").equalsIgnoreCase("")) {
+            // user has submitted a string to the text field
+            desiredLocationFromWelcome = intent.getStringExtra("desiredLocation");
+        }
+        else {
+            // get from manager, because user has pressed
+            desiredLocationFromWelcome = ""; //empty string
+        }
         RecyclerView recyclerView = (RecyclerView) findViewById(R.id.geo_list);
         assert recyclerView != null;
         setupRecyclerView(recyclerView);
@@ -92,21 +94,28 @@ public class GeoListActivity extends AppCompatActivity implements SearchView.OnQ
 
             @Override
             public void onFailure(String message, Throwable t) {
-                Log.e(LOG_TAG, "GeoLocationService: onFailure -> Failure: " + message, t);
-                showSnackbar("GeoLocationService: onFailure -> Failure: " + message);
+                Log.e(LOG_TAG, ER_LOG_GEO_LOCATION + message, t);
+                showSnackbar(ER_LOG_GEO_LOCATION + message);
             }
         });
 
-        if (getIntent() != null && getIntent().getExtras() != null &&
-                getIntent().getExtras().containsKey("home") && getIntent().getExtras().getBoolean("home")) {
-            return;
+        // get the location for the string which the user entered in the welcome screen if there is one
+        if(desiredLocationFromWelcome.isEmpty()){
+            try {
+                geoLocationService.getCurrentLocation();
+            }
+            catch (Exception e){
+                Log.e(LOG_TAG, ER_LOG_GEO_LOCATION, e);
+                showSnackbar(ER_LOG_GEO_LOCATION + e.getMessage());
+            }
         }
-        // get the location for the string which the user entered in the welcome screen
-        try {
-            geoLocationService.getGeoLocationByName(desiredLocationFromWelcome);
-        } catch (Exception e) {
-            Log.e(LOG_TAG, "GeoLocationService: getCurrentLocation -> Failure", e);
-            showSnackbar("GeoLocationService: getCurrentLocation -> Failure: " + e.getMessage());
+        else {
+            try {
+                geoLocationService.getGeoLocationByName(desiredLocationFromWelcome);
+            } catch (Exception e) {
+                Log.e(LOG_TAG,ER_LOG_GEO_LOCATION, e);
+                showSnackbar(ER_LOG_GEO_LOCATION + e.getMessage());
+            }
         }
     }
 

@@ -79,7 +79,7 @@ public class LocationListActivity extends AppCompatActivity implements SearchVie
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_location_list);
-// ...
+
         mAuth = FirebaseAuth.getInstance();
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -113,8 +113,9 @@ public class LocationListActivity extends AppCompatActivity implements SearchVie
             recyclerView.getAdapter().notifyDataSetChanged();
 
             GeoContent.GeoItem geoItem = GeoContent.getItemMap().get(getIntent().getExtras().getString(ARG_LIST_ID));
-
-            getWebCamNearby(geoItem.geoLocation, INITIAL_RADIUS_OF_SEARCH_KM);
+            if (geoItem != null) {
+                getWebCamNearby(geoItem.geoLocation, INITIAL_RADIUS_OF_SEARCH_KM);
+            }
         }
     }
 
@@ -203,21 +204,20 @@ public class LocationListActivity extends AppCompatActivity implements SearchVie
     public void onStart() {
         super.onStart();
 
-        mAuth.signInAnonymously()
-                .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
-                    @Override
-                    public void onComplete(@NonNull Task<AuthResult> task) {
-                        if (task.isSuccessful()) {
-                            // Sign in success, update UI with the signed-in user's information
-                            Log.d(LOG_TAG, "signInAnonymously:success");
-                        } else {
-                            // If sign in fails, display a message to the user.
-                            Log.w(LOG_TAG, "signInAnonymously:failure", task.getException());
-                            Toast.makeText(getApplicationContext(), "Authentication failed.",
-                                    Toast.LENGTH_SHORT).show();
-                        }
-                    }
-                });
+        mAuth.signInAnonymously().addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
+            @Override
+            public void onComplete(@NonNull Task<AuthResult> task) {
+                if (task.isSuccessful()) {
+                    // Sign in success, update UI with the signed-in user's information
+                    Log.d(LOG_TAG, "signInAnonymously:success");
+                } else {
+                    // If sign in fails, display a message to the user.
+                    Log.w(LOG_TAG, "signInAnonymously:failure", task.getException());
+                    Toast.makeText(getApplicationContext(), "Authentication failed.",
+                            Toast.LENGTH_SHORT).show();
+                }
+            }
+        });
     }
 
     @Override
@@ -225,9 +225,10 @@ public class LocationListActivity extends AppCompatActivity implements SearchVie
         super.onResume();
         // update webcams and ratings when coming back from detail view or search view
         GeoContent.GeoItem geoItem = GeoContent.getItemMap().get(getIntent().getExtras().getString(ARG_LIST_ID));
-
-        getWebCamNearby(geoItem.geoLocation, INITIAL_RADIUS_OF_SEARCH_KM);
-
+        // check if we have a location  otherwise we dont have to get the webcams
+        if (geoItem != null){
+            getWebCamNearby(geoItem.geoLocation, INITIAL_RADIUS_OF_SEARCH_KM);
+        }
     }
 
     private void getWebCamNearby(GeoLocation geoLocation, int radiusOfSearchKm) {

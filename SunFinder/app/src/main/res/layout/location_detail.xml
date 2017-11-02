@@ -6,6 +6,19 @@
     android:orientation="vertical"
     tools:context="ch.msengineering.sunfinder.LocationDetailFragment">
 
+    <ImageView
+        android:id="@+id/image_inline"
+        android:layout_width="match_parent"
+        android:layout_height="300dp"
+        android:background="@color/white"
+        android:scaleType="centerCrop" />
+
+    <android.support.design.widget.FloatingActionButton
+        android:id="@+id/fab_inline"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom|end"
+        android:src="@android:drawable/ic_menu_mapmode" />
 
     <TextView
         android:id="@+id/courtesy"
@@ -48,7 +61,7 @@
         android:id="@+id/ratingBar"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_gravity="bottom|left"
+        android:layout_gravity="bottom|start"
         android:numStars="5"
         android:stepSize="0.1"
         android:visibility="visible" />
@@ -57,7 +70,7 @@
         android:id="@+id/push_rating"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_gravity="bottom|right"
+        android:layout_gravity="bottom|end"
         android:src="@drawable/rate_text" />
 
 </LinearLayout>

@@ -1,6 +1,8 @@
 package ch.msengineering.sunfinder;
 
 import android.app.Activity;
+import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.design.widget.FloatingActionButton;
@@ -57,6 +59,8 @@ public class LocationDetailFragment extends Fragment {
     private Activity activity;
     private Rating currentRating;
 
+    private boolean hasAppBarWithImage = false;
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -71,6 +75,9 @@ public class LocationDetailFragment extends Fragment {
                 if (imageView != null) {
                     Picasso.with(LocationDetailFragment.this.getContext()).load(mItem.webCam.getImage().getCurrent().getPreview()).into(imageView);
                 }
+                hasAppBarWithImage = true;
+            } else {
+                hasAppBarWithImage = false;
             }
         }
         // ratingService
@@ -147,6 +154,32 @@ public class LocationDetailFragment extends Fragment {
                     ratingBar.setRating(rating);
                 }
             });
+
+            if (hasAppBarWithImage) {
+                rootView.findViewById(R.id.image_inline).setVisibility(View.GONE);
+                rootView.findViewById(R.id.fab_inline).setVisibility(View.GONE);
+            } else {
+                ImageView imageView = rootView.findViewById(R.id.image_inline);
+                if (imageView != null) {
+                    Picasso.with(LocationDetailFragment.this.getContext()).load(mItem.webCam.getImage().getCurrent().getPreview()).into(imageView);
+                }
+                rootView.findViewById(R.id.image_inline).setVisibility(View.VISIBLE);
+
+                FloatingActionButton fab = rootView.findViewById(R.id.fab_inline);
+                fab.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        Uri gmmIntentUri = Uri.parse("geo:" + mItem.webCam.getLocation().getLatitude() + "," + mItem.webCam.getLocation().getLongitude() +
+                                "?q=" + mItem.webCam.getLocation().getLatitude() + "," + mItem.webCam.getLocation().getLongitude() + "(" + mItem.webCam.getTitle() + ")");
+                        Intent mapIntent = new Intent(Intent.ACTION_VIEW, gmmIntentUri);
+                        mapIntent.setPackage("com.google.android.apps.maps");
+                        if (mapIntent.resolveActivity(activity.getPackageManager()) != null) {
+                            startActivity(mapIntent);
+                        }
+                    }
+                });
+                rootView.findViewById(R.id.fab_inline).setVisibility(View.VISIBLE);
+            }
         }
 
         return rootView;

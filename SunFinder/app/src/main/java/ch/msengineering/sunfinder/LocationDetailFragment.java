@@ -187,9 +187,8 @@ public class LocationDetailFragment extends Fragment {
             Log.e(LOG_TAG, "ratingService: getRating -> Failure", e);
         }
     }
-
     // helper for Snackbar
     private void showSnackbar(final String message) {
-        Snackbar.make(activity.findViewById(R.id.location_detail), message, LENGTH_LONG).show();
+        Snackbar.make(getActivity().findViewById(R.id.location_list), message, LENGTH_LONG).show();
     }
 }

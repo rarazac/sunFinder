@@ -4,7 +4,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
-import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.DividerItemDecoration;
@@ -28,6 +27,7 @@ import ch.msengineering.sunfinder.services.geolocation.api.GeoLocation;
 import static android.support.design.widget.BaseTransientBottomBar.LENGTH_LONG;
 import static ch.msengineering.sunfinder.Constants.LOG_TAG;
 import static ch.msengineering.sunfinder.Constants.ER_LOG_GEO_LOCATION;
+import static ch.msengineering.sunfinder.Constants.DESIRED_LOCATION;
 
 /**
  * An activity representing a list of Locations. This activity
@@ -57,11 +57,10 @@ public class GeoListActivity extends AppCompatActivity implements SearchView.OnQ
         Intent intent = getIntent();
         String desiredLocationFromWelcome;
         // check if text field was empty, or if we should get the location from the location manager
-        if(intent != null && !intent.getStringExtra("desiredLocation").equalsIgnoreCase("getFromManager") && !intent.getStringExtra("desiredLocation").equalsIgnoreCase("")) {
+        if (intent != null && !intent.getStringExtra(DESIRED_LOCATION).equalsIgnoreCase("getFromManager") && !intent.getStringExtra(DESIRED_LOCATION).equalsIgnoreCase("")) {
             // user has submitted a string to the text field
-            desiredLocationFromWelcome = intent.getStringExtra("desiredLocation");
-        }
-        else {
+            desiredLocationFromWelcome = intent.getStringExtra(DESIRED_LOCATION);
+        } else {
             // get from manager, because user has pressed
             desiredLocationFromWelcome = ""; //empty string
         }
@@ -100,20 +99,13 @@ public class GeoListActivity extends AppCompatActivity implements SearchView.OnQ
         });
 
         // get the location for the string which the user entered in the welcome screen if there is one
-        if(desiredLocationFromWelcome.isEmpty()){
-            try {
-                geoLocationService.getCurrentLocation();
-            }
-            catch (Exception e){
-                Log.e(LOG_TAG, ER_LOG_GEO_LOCATION, e);
-                showSnackbar(ER_LOG_GEO_LOCATION + e.getMessage());
-            }
-        }
-        else {
+        if (desiredLocationFromWelcome.isEmpty()) {
+            getCurrentLocation();
+        } else {
             try {
                 geoLocationService.getGeoLocationByName(desiredLocationFromWelcome);
             } catch (Exception e) {
-                Log.e(LOG_TAG,ER_LOG_GEO_LOCATION, e);
+                Log.e(LOG_TAG, ER_LOG_GEO_LOCATION, e);
                 showSnackbar(ER_LOG_GEO_LOCATION + e.getMessage());
             }
         }

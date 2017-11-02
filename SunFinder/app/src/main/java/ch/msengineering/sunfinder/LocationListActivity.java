@@ -226,7 +226,7 @@ public class LocationListActivity extends AppCompatActivity implements SearchVie
         // update webcams and ratings when coming back from detail view or search view
         GeoContent.GeoItem geoItem = GeoContent.getItemMap().get(getIntent().getExtras().getString(ARG_LIST_ID));
         // check if we have a location  otherwise we dont have to get the webcams
-        if (geoItem != null){
+        if (geoItem != null) {
             getWebCamNearby(geoItem.geoLocation, INITIAL_RADIUS_OF_SEARCH_KM);
         }
     }

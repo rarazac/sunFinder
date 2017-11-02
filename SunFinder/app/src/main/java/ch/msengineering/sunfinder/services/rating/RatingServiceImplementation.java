@@ -22,6 +22,7 @@ public class RatingServiceImplementation implements RatingService {
 
     private final RatingServiceConsumer ratingServiceConsumer;
     private DatabaseReference mDatabase;
+
     public RatingServiceImplementation(RatingServiceConsumer ratingServiceConsumer) {
         this.ratingServiceConsumer = ratingServiceConsumer;
     }

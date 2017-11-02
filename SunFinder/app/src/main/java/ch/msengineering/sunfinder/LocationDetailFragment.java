@@ -61,7 +61,7 @@ public class LocationDetailFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         this.activity = this.getActivity();
-        this.currentRating = new Rating("0",0,0);
+        this.currentRating = new Rating("0", 0, 0);
         if (getArguments().containsKey(ARG_ITEM_ID)) {
             mItem = LocationContent.getItemMap().get(getArguments().getString(ARG_ITEM_ID));
             CollapsingToolbarLayout appBarLayout = activity.findViewById(R.id.toolbar_layout);
@@ -165,14 +165,13 @@ public class LocationDetailFragment extends Fragment {
             int ts = tsLong.intValue();
 
             // only allow rating if the timestamp from the is older then 3600 seconds
-            if ((currentRating.getTimeStamp() + 3600 ) < ts) {
+            if ((currentRating.getTimeStamp() + 3600) < ts) {
                 ratingService.setRating(id, ratingValue, ts);
                 // update local currentRating
                 currentRating.setTimeStamp(ts);
                 currentRating.setId(id);
                 currentRating.setRatingValue(ratingValue);
-            }
-            else{
+            } else {
                 showSnackbar("this webcam was already rated");
             }
         } catch (Exception e) {

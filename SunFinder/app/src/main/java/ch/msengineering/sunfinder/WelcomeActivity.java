@@ -26,7 +26,7 @@ public class WelcomeActivity extends AppCompatActivity {
             }
         });
         // the same action getCurrentLocation
-        FloatingActionButton  takeCurrentLocationFab = (FloatingActionButton) findViewById(R.id.myLocationFab);
+        FloatingActionButton takeCurrentLocationFab = (FloatingActionButton) findViewById(R.id.myLocationFab);
         takeCurrentLocationFab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {

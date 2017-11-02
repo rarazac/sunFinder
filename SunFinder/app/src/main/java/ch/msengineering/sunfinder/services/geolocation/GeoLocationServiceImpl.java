@@ -46,67 +46,79 @@ public class GeoLocationServiceImpl implements GeoLocationService {
 
         final String bestProvider = locationManager.getBestProvider(new Criteria(), true);
 
-        if (ActivityCompat.checkSelfPermission(activity, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(activity, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-            ActivityCompat.requestPermissions(activity, new String[]{Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION}, 1337);
-        } else {
-            locationManager.requestLocationUpdates(bestProvider, refreshTimeMs,
-                    refreshDistanceMeter, new LocationListener() {
-                        @Override
-                        public void onLocationChanged(Location location) {
-                            try {
-                                getGeoLocationByLongLat(bestProvider, location.getLatitude(), location.getLongitude());
-                            } catch (IOException e) {
-                                Log.e(LOG_TAG, "GeoLocationService: onLocationChanged -> Failure", e);
+        try {
+            if (ActivityCompat.checkSelfPermission(activity, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(activity, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+                ActivityCompat.requestPermissions(activity, new String[]{Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION}, 1337);
+            } else {
+                locationManager.requestLocationUpdates(bestProvider, refreshTimeMs,
+                        refreshDistanceMeter, new LocationListener() {
+                            @Override
+                            public void onLocationChanged(Location location) {
+                                try {
+                                    getGeoLocationByLongLat(bestProvider, location.getLatitude(), location.getLongitude());
+                                } catch (IOException e) {
+                                    Log.e(LOG_TAG, "GeoLocationService: onLocationChanged -> Failure", e);
+                                }
                             }
-                        }
 
-                        @Override
-                        public void onStatusChanged(String s, int i, Bundle bundle) {
-                            //Not used
-                        }
+                            @Override
+                            public void onStatusChanged(String s, int i, Bundle bundle) {
+                                //Not used
+                            }
 
-                        @Override
-                        public void onProviderEnabled(String s) {
-                            //Not used
-                        }
+                            @Override
+                            public void onProviderEnabled(String s) {
+                                //Not used
+                            }
 
-                        @Override
-                        public void onProviderDisabled(String s) {
-                            //Not used
-                        }
-                    });
-        }
+                            @Override
+                            public void onProviderDisabled(String s) {
+                                //Not used
+                            }
+                        });
+            }
 
-        Location lastKnownLocation = locationManager.getLastKnownLocation(bestProvider);
-        if (lastKnownLocation != null) {
-            getGeoLocationByLongLat(bestProvider, lastKnownLocation.getLatitude(), lastKnownLocation.getLongitude());
-        } else {
-            Log.w(LOG_TAG, "GeoLocationService: getCurrentLocation -> Warning: No last known location!");
+            Location lastKnownLocation = locationManager.getLastKnownLocation(bestProvider);
+            if (lastKnownLocation != null) {
+                getGeoLocationByLongLat(bestProvider, lastKnownLocation.getLatitude(), lastKnownLocation.getLongitude());
+            } else {
+                Log.w(LOG_TAG, "GeoLocationService: getCurrentLocation -> Warning: No last known location!");
+                localServiceConsumer.onGeoLocation(createDummyGeoLocation());
+            }
+        } catch (Exception e) {
+            Log.e(LOG_TAG, "GeoLocationService: getCurrentLocation -> Failure", e);
             localServiceConsumer.onGeoLocation(createDummyGeoLocation());
+            throw e;
         }
     }
 
     public void getGeoLocationByName(String locationName) throws IOException {
-        if (Geocoder.isPresent()) {
-            Geocoder gc = new Geocoder(activity);
-            List<Address> addresses = gc.getFromLocationName(locationName, 10);
+        try {
+            if (Geocoder.isPresent()) {
+                Geocoder gc = new Geocoder(activity);
+                List<Address> addresses = gc.getFromLocationName(locationName, 10);
 
-            List<GeoLocation> geoLocations = new ArrayList<>(addresses.size());
-            for (Address a : addresses) {
-                if (a.hasLatitude() && a.hasLongitude()) {
-                    geoLocations.add(
-                            new GeoLocation(
-                                    a.getFeatureName(),
-                                    a.getCountryName(),
-                                    a.getCountryCode(),
-                                    a.getLatitude(),
-                                    a.getLongitude()));
+                List<GeoLocation> geoLocations = new ArrayList<>(addresses.size());
+                for (Address a : addresses) {
+                    if (a.hasLatitude() && a.hasLongitude()) {
+                        geoLocations.add(
+                                new GeoLocation(
+                                        a.getFeatureName(),
+                                        a.getCountryName(),
+                                        a.getCountryCode(),
+                                        a.getLatitude(),
+                                        a.getLongitude()));
+                    }
                 }
+                localServiceConsumer.onGeoLocation(geoLocations);
+            } else {
+                Log.w(LOG_TAG, "GeoLocationService: getGeoLocationByName -> Warning: Device does not have a Geocoder!");
+                localServiceConsumer.onGeoLocation(createDummyGeoLocation());
             }
-            localServiceConsumer.onGeoLocation(geoLocations);
-        } else {
-            Log.w(LOG_TAG, "GeoLocationService: getGeoLocationByName -> Warning: Device does not have a Geocoder!");
+        } catch (Exception e) {
+            Log.e(LOG_TAG, "GeoLocationService: getGeoLocationByName -> Failure", e);
             localServiceConsumer.onGeoLocation(createDummyGeoLocation());
+            throw e;
         }
     }
 

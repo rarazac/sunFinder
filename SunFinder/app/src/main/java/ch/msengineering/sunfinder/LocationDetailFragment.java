@@ -6,7 +6,6 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.text.format.DateFormat;
 import android.util.Log;
@@ -16,6 +15,7 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.RatingBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.firebase.database.DatabaseError;
 import com.squareup.picasso.Picasso;
@@ -86,9 +86,9 @@ public class LocationDetailFragment extends Fragment {
             public void onRatingSet(DatabaseError databaseError) {
                 // display result of rating push to the user
                 if (databaseError == null) {
-                    showSnackbar("thanks for your rating!");
+                    Toast.makeText(getActivity(),"Thanks for your rating", Toast.LENGTH_SHORT).show();
                 } else {
-                    showSnackbar("sorry, your rating could not be published");
+                    Log.e(LOG_TAG, "RatingService: onFailure -> Failure: ", databaseError.toException());
                 }
             }
 
@@ -114,7 +114,6 @@ public class LocationDetailFragment extends Fragment {
 
             @Override
             public void onFailure(Exception e) {
-                showSnackbar("RatingService: onFailure -> Failure: " + e.toString());
                 Log.e(LOG_TAG, "RatingService: onFailure -> Failure: ", e);
             }
         });
@@ -205,7 +204,7 @@ public class LocationDetailFragment extends Fragment {
                 currentRating.setId(id);
                 currentRating.setRatingValue(ratingValue);
             } else {
-                showSnackbar("this webcam was already rated");
+                Toast.makeText(getActivity(),"This Webcam is already rated", Toast.LENGTH_SHORT).show();
             }
         } catch (Exception e) {
             Log.e(LOG_TAG, "ratingService: setRating -> Failure", e);
@@ -219,9 +218,5 @@ public class LocationDetailFragment extends Fragment {
         } catch (Exception e) {
             Log.e(LOG_TAG, "ratingService: getRating -> Failure", e);
         }
-    }
-    // helper for Snackbar
-    private void showSnackbar(final String message) {
-        Snackbar.make(getActivity().findViewById(R.id.location_list), message, LENGTH_LONG).show();
     }
 }
